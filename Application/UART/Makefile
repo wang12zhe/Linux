@@ -1,6 +1,6 @@
 CC=gcc
  
 all:
-	$(CC)  *.c  -o  usart
+	$(CC)  *.c  -g -o  usart -lpthread
 clear:
 	rm  usart
