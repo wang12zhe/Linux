@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/UserInterface/UserInterface",
+            "program": "${workspaceFolder}/usart",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
@@ -16,12 +16,11 @@
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath":"/usr/bin/gdb",
-            "miDebuggerServerAddress": "192.168.1.246:1234",
+            "miDebuggerServerAddress": "192.168.11.108:1234",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
-                    "text": "-gdb-set follow-fork-mode child",
-                    //"text": "-enable-pretty-printing",
+                    "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
             ]

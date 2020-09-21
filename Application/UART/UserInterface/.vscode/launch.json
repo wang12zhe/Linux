@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/UserInterface/UserInterface",
+            "program": "${workspaceFolder}/UserInterface",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",

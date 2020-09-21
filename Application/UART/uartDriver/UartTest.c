@@ -23,13 +23,31 @@
 #include<errno.h>      /*错误号定义*/    
 #include<string.h>
 #include <pthread.h>
- 
+
+pthread_mutex_t mut;
+unsigned char RetryFlag =0;
+unsigned char ReceFlag =0;
 struct Command{
     unsigned char Index;
     unsigned char Description[30];
     void (*fp_Action)(int fd, unsigned char send_buf[],unsigned int len);
 };
 
+struct FDStr{
+    int Uart_Fd;
+    int FIFO_Fd;
+};
+
+
+/* 毫秒级 延时 */
+void ms_sleep(int ms)
+{
+	struct timeval delay;
+	delay.tv_sec = 0;
+	delay.tv_usec = ms * 1000; // 20 ms
+	select(0, NULL, NULL, NULL, &delay);
+
+}
 void Action(int fd, unsigned char send_buf[],unsigned int len){
     len = UART0_Send(fd,send_buf,len);
 }
@@ -42,44 +60,55 @@ struct Command Cmd[] ={
 
 void SendData(void *arg){
 
-   char ReadStr[50];
+   char buff[50];
    unsigned int ComdLen = sizeof(Cmd)/sizeof(Cmd[0]);
-   unsigned int i=0,j=0;
-   int fd = *(int *)arg;
+   int len =0;
+   struct FDStr FD = *(struct FDStr *)arg;
+   
+   
     while(1){
-        fgets(ReadStr,50,stdin);
-        j =0;
-        if(strlen(ReadStr) > 0){
-            while(ReadStr[j]){
-                for(i =0;i < ComdLen;i++){
-                    if (ReadStr[j] == Cmd[i].Index){
-                        Cmd[i].fp_Action(fd,Cmd[i].Description,strlen(Cmd[i].Description));  
-                        break;  
+        len = read(FD.FIFO_Fd,buff,sizeof(buff)/sizeof(buff[0]));
+        int RetryCnt =5;
+        printf("Read data len =%d \n",len);
+        if(len > 0){
+            do{
+                UART0_Send(FD.Uart_Fd,buff,len);
+                ReceFlag =1;
+                unsigned char Wait =0;
+                while(Wait < 100){
+                    if(ReceFlag == 0){
+                        RetryCnt =0;
+                        break;
+                    }else{
+                        ms_sleep(10); //10Ms
+                        Wait ++;
                     }
                 }
-                j ++;
-            }
-        }else{
-            sleep(1);
+                RetryCnt --;
+            }while(RetryCnt > 0);
         }
     }
 }
 void Receive (void *arg){
     char len=0;
     char rcv_buf[256];
-    int fd = *(int *)arg;
+    struct FDStr FD = *(struct FDStr *)arg;
     while (1) {  //循环读取数据
         memset(rcv_buf,0,256);      
-        len = UART0_Recv(fd, rcv_buf,sizeof(rcv_buf)); 
+        len = UART0_Recv(FD.Uart_Fd, rcv_buf,sizeof(rcv_buf)); 
+        ReceFlag =1;
         if(len > 0){    
-            rcv_buf[len] = '\0';    
-            printf("receive data is %s\n",rcv_buf); 
+            rcv_buf[len] = '\0'; 
+            write(FD.FIFO_Fd,rcv_buf, len +1);   
+            printf("receive data is %s\n",rcv_buf);
+            RetryFlag =0; 
         }    
-        else{     
+        else{  
+            RetryFlag =1;  
         }                   
     }
 }
-//start gdbserver on linux gdbserver localhost:1234 /home/a123/UART/usart /dev/ttyS0
+//start gdbserver on linux: gdbserver localhost:1234 /home/a123/UART/usart /dev/ttyS0
 int main(int argc, char **argv)    
 {
 	int fd = -1;           //文件描述符，先定义一个与程序无关的值，防止fd为任意值导致程序出bug    
@@ -87,33 +116,58 @@ int main(int argc, char **argv)
     int len;                            
     int i;    
     pthread_t	ntid1,ntid2;
-             
+    struct FDStr FD;
+    int FIFO_fd = -1;
+    
+    printf(" \n argc =%d \n",argc);
+    printf("argv 0=%s \n",argv[0]);
+    printf("argv 1=%s \n",argv[1]);
+    printf("argv 2=%s \n",argv[2]); 
+
     if(argc != 2)    
     {  
         printf("=========================\n");  
-        printf("Usage: %s /dev/ttyS0     \n",argv[0]);
+        printf("Usage: %s /dev/ttyS0   Fifo name   \n",argv[0]);
         printf("=========================\n");
         return FALSE;    
-    }    
-     fd = UART0_Open(fd,argv[1]); //打开串口，返回文件描述符   
-     printf("iiiiiiiiiii-%d",fd);
+    }  
+
+    if((FIFO_fd = open(argv[1],O_RDWR)) < 0){
+        perror(" Father : Open FIFO error");
+        exit(1);
+    }
+
+
+     fd = UART0_Open(fd,argv[0]); //打开串口，返回文件描述符   ls 
      do{    
         err = UART0_Init(fd,115200,0,8,1,'N');    
         printf("Set Port Exactly!\n"); 
         sleep(1);   
     }while(FALSE == err || FALSE == fd);    
+    
+    pthread_mutex_init(&mut,NULL);
+	
+    FD.Uart_Fd = fd;
+    FD.FIFO_Fd = FIFO_fd;
 
-
-	err = pthread_create(&ntid1, NULL, (void *)SendData, (&fd));
+    err = pthread_create(&ntid1, NULL, (void *)SendData, (&FD));
 	if (err != 0){
         perror("can't create thread");     
     }
 
-    err = pthread_create(&ntid2, NULL, (void *)Receive, (&fd));
+    err = pthread_create(&ntid2, NULL, (void *)Receive, (&FD));
 	if (err != 0){
         perror("can't create thread");     
     }
 
-pthread_join(ntid1,NULL);
-pthread_join(ntid2,NULL);
-} 
+    if(ntid1 !=0) {
+        pthread_join(ntid1,NULL);
+    }
+    if(ntid1 !=0) {
+        pthread_join(ntid2,NULL);
+    }
+    close(fd);
+
+    return 0;
+}
+
