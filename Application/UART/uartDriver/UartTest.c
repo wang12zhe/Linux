@@ -23,6 +23,7 @@
 #include<errno.h>      /*错误号定义*/    
 #include<string.h>
 #include <pthread.h>
+#include <signal.h>
 
 pthread_mutex_t mut;
 unsigned char RetryFlag =0;
@@ -36,6 +37,7 @@ struct Command{
 struct FDStr{
     int Uart_Fd;
     int FIFO_Fd;
+    pid_t ppid;
 };
 
 
@@ -88,6 +90,8 @@ void SendData(void *arg){
             }while(RetryCnt > 0);
         }
     }
+
+    printf("OUT  \n");
 }
 void Receive (void *arg){
     char len=0;
@@ -101,7 +105,11 @@ void Receive (void *arg){
             rcv_buf[len] = '\0'; 
             write(FD.FIFO_Fd,rcv_buf, len +1);   
             printf("receive data is %s\n",rcv_buf);
-            RetryFlag =0; 
+            RetryFlag =0;
+            if(kill(FD.ppid, SIGUSR1) == -1){
+                perror("fail to send signal\n");
+                exit(1);
+            } 
         }    
         else{  
             RetryFlag =1;  
@@ -118,7 +126,8 @@ int main(int argc, char **argv)
     pthread_t	ntid1,ntid2;
     struct FDStr FD;
     int FIFO_fd = -1;
-    
+    pid_t ppid;
+
     printf(" \n argc =%d \n",argc);
     printf("argv 0=%s \n",argv[0]);
     printf("argv 1=%s \n",argv[1]);
@@ -131,7 +140,8 @@ int main(int argc, char **argv)
         printf("=========================\n");
         return FALSE;    
     }  
-
+    ppid = getppid();
+    printf("111 PPID =%d",ppid);
     if((FIFO_fd = open(argv[1],O_RDWR)) < 0){
         perror(" Father : Open FIFO error");
         exit(1);
@@ -149,7 +159,7 @@ int main(int argc, char **argv)
 	
     FD.Uart_Fd = fd;
     FD.FIFO_Fd = FIFO_fd;
-
+    FD.ppid = ppid;
     err = pthread_create(&ntid1, NULL, (void *)SendData, (&FD));
 	if (err != 0){
         perror("can't create thread");     

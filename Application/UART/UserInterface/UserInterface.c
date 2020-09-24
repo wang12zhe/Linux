@@ -22,6 +22,8 @@
 #include<errno.h>      /*错误号定义*/    
 #include<string.h>
 #include <pthread.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 pthread_mutex_t mut;
 unsigned char RetryFlag =0;
@@ -32,7 +34,7 @@ struct Command{
     void (*fp_Action)(int fd, unsigned char send_buf[],unsigned int len);
 };
 
-
+int fd =-1;
 
 /* 毫秒级 延时 */
 void mssleep(int ms)
@@ -83,31 +85,63 @@ void ParserCommand(int fd){
         }else{
             sleep(1);
         }
+
+        // if(wait(NULL) ==-1){ //回收子进程状态，避免僵尸进程
+        //     perror("fail to wait\n");
+        //     exit(1);
+        // }
+        // printf("child has been killed.\n");
     }
+}
+
+void ReadData(int signal_no){
+    int len =0;
+    unsigned char buff[255];
+    if(signal_no == SIGUSR1){
+        len = read(fd,buff,sizeof(buff)/sizeof(buff[0]));
+        printf("Father Get data len  =%d \n",len);
+        if(len > 0){
+            printf("Father get data :%s \n",buff);   
+        }
+    }
+}
+
+void CatchCrash(int signal_no){
+  int status;  
+  while(waitpid(-1, &status, WNOHANG) > 0);
 }
 
 //start gdbserver on linux gdbserver localhost:1234 /home/a123/UART/usart /dev/ttyS0
 int main(int argc, char **argv)    
 {
-
+    pid_t ppid;
     mode_t mode =0666;
-    int fd =-1;
     if(argc != 2){  
         printf("=========================\n");  
         printf("Usage: %s File Name    \n",argv[0]);
         printf("=========================\n");
         exit(1);   
     } 
-
-    //Create FIFO
-    if((mkfifo(argv[1],mode)) < 0){
-        perror("Create FIFO eror");
+    //为两个信号设置信号处理函数
+    if(signal(SIGUSR1, ReadData) == SIG_ERR){ //设置出错
+        perror("Can't set handler for SIGUSR1\n");
         exit(1);
     }
+        //为两个信号设置信号处理函数
+    if(signal(SIGCHLD, CatchCrash) == SIG_ERR){ //设置出错
+        perror("Can't set handler for SIGCHLD\n");
+        exit(1);
+    }
+    if  (access (argv[1] ,0 ) == -1 ){
+        //Create FIFO
+        if((mkfifo(argv[1],mode| O_APPEND)) < 0){
+            perror("C2222222222reate FIFO eror");
+            exit(1);
+        }
+     }
     printf("Create FIFO  %s  successfully ！ \n",argv[1]);
 
     pid_t pid;
-
 
     if((pid = fork()) <0){
         perror("Fail to fork");
@@ -122,12 +156,14 @@ int main(int argc, char **argv)
         ParserCommand(fd);
         exit(0);
     }else{   //Children
+        ppid = getppid();
+        printf("222 PPID =%d",ppid);
+    
         printf("Start ChildRen ！\n");
         execl("./../uartDriver/usart","/dev/ttyS0",argv[1],NULL);
         exit(0);
     }
-
-
+   
     close(fd);
     return 0;
 }
