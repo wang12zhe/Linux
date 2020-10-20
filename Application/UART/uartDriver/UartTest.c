@@ -36,7 +36,8 @@ struct Command{
 
 struct FDStr{
     int Uart_Fd;
-    int FIFO_Fd;
+    int FIFO_Fdrd;
+    int FIFO_Fdwr;
     pid_t ppid;
 };
 
@@ -69,8 +70,8 @@ void SendData(void *arg){
    
    
     while(1){
-        len = read(FD.FIFO_Fd,buff,sizeof(buff)/sizeof(buff[0]));
-        int RetryCnt =5;
+        len = read(FD.FIFO_Fdrd,buff,sizeof(buff)/sizeof(buff[0]));
+        int RetryCnt =1;
         printf("Read data len =%d \n",len);
         if(len > 0){
             do{
@@ -103,7 +104,7 @@ void Receive (void *arg){
         ReceFlag =1;
         if(len > 0){    
             rcv_buf[len] = '\0'; 
-            write(FD.FIFO_Fd,rcv_buf, len +1);   
+            write(FD.FIFO_Fdwr,rcv_buf, len +1);   
             printf("receive data is %s\n",rcv_buf);
             RetryFlag =0;
             if(kill(FD.ppid, SIGUSR1) == -1){
@@ -125,7 +126,8 @@ int main(int argc, char **argv)
     int i;    
     pthread_t	ntid1,ntid2;
     struct FDStr FD;
-    int FIFO_fd = -1;
+    int FIFO_fdwr = -1;
+    int FIFO_fdrd = -1;
     pid_t ppid;
 
     printf(" \n argc =%d \n",argc);
@@ -133,24 +135,27 @@ int main(int argc, char **argv)
     printf("argv 1=%s \n",argv[1]);
     printf("argv 2=%s \n",argv[2]); 
 
-    if(argc != 2)    
+    if(argc != 3)    
     {  
         printf("=========================\n");  
-        printf("Usage: %s /dev/ttyS0   Fifo name   \n",argv[0]);
+        printf("Usage: %s /dev/ttyS0   ReadFifo name   WriteFifo name3\n",argv[0]);
         printf("=========================\n");
         return FALSE;    
     }  
     ppid = getppid();
     printf("111 PPID =%d",ppid);
-    if((FIFO_fd = open(argv[1],O_RDWR)) < 0){
-        perror(" Father : Open FIFO error");
+    if((FIFO_fdrd = open(argv[1],O_RDONLY)) < 0){
+        perror(" Father : Open WriteFIFO error");
+        exit(1);
+    }
+    if((FIFO_fdwr = open(argv[2],O_WRONLY)) < 0){
+        perror(" Father : Open ReadFIFO error");
         exit(1);
     }
 
-
      fd = UART0_Open(fd,argv[0]); //打开串口，返回文件描述符   ls 
      do{    
-        err = UART0_Init(fd,115200,0,8,1,'N');    
+        err = UART0_Init(fd,57600,0,8,1,'N');    
         printf("Set Port Exactly!\n"); 
         sleep(1);   
     }while(FALSE == err || FALSE == fd);    
@@ -158,7 +163,8 @@ int main(int argc, char **argv)
     pthread_mutex_init(&mut,NULL);
 	
     FD.Uart_Fd = fd;
-    FD.FIFO_Fd = FIFO_fd;
+    FD.FIFO_Fdrd = FIFO_fdrd;
+    FD.FIFO_Fdwr = FIFO_fdwr;
     FD.ppid = ppid;
     err = pthread_create(&ntid1, NULL, (void *)SendData, (&FD));
 	if (err != 0){
