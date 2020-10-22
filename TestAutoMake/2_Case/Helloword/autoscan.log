@@ -1,0 +1,5 @@
+1 AUTOMAKE_OPTIONS=foreign
+2 SUBDIRS=SayHello
+3 bin_PROGRAMS=hellowww
+4 hello_SOURCES=main.c
+5 hello_LDADD=SayHello/mytest.a

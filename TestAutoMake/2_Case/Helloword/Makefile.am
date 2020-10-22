@@ -1,0 +1,5 @@
+AUTOMAKE_OPTIONS=foreign
+SUBDIRS=SayHello
+bin_PROGRAMS=helloWW
+helloWW_SOURCES=main.c
+helloWW_LDADD=SayHello/libmytest.a
