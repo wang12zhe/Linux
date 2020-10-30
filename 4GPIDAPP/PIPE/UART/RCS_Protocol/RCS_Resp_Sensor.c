@@ -25,7 +25,6 @@ INT16U CalibRespData = 0;
 
 static void Sensor_GetFwVerResp(RCS_t *rcs)
 {
-  // DebugSensor("\r\n Sensor_GetFwVerResp");
   //Fw version max lentg is 10
   if(rcs->DataLen < 10 ){
       memset(Sensor.st_SenInfo.FwVer,0,sizeof(Sensor.st_SenInfo.FwVer));
@@ -56,7 +55,6 @@ static void Sensor_GetSenSNRespNext(RCS_t *rcs)
 }
 static void Sensor_GetModelNameResp(RCS_t *rcs)
 {
-  // DebugSensor("\r\n Sensor_GetFwVerResp");
   //Fw Model name max lentg is 20
   if(rcs->DataLen < 20 ){
       memcpy(Sensor.st_SenInfo.ModelName,rcs->DataBuf,rcs->DataLen); 
@@ -74,7 +72,6 @@ static void Sensor_GetModelNameRespNext(RCS_t *rcs)
 
 static void Sensor_GetProdNameResp(RCS_t *rcs)
 {
-  // DebugSensor("\r\n Sensor_GetFwVerResp");
   //Fw Product name  max lentg is 20
   if(rcs->DataLen < 20 ){
       memset(Sensor.st_SenInfo.ProdName,0,sizeof(Sensor.st_SenInfo.ProdName));
@@ -128,18 +125,7 @@ static void Sensor_GetDataPackResp(RCS_t *rcs)
        Sensor.st_RunData.GasReading   += rcs->DataBuf[i ++];
        Sensor.st_RunData.GasReading <<=8;
        Sensor.st_RunData.GasReading   += rcs->DataBuf[i ++];
-       // sensor only support PPM now 2020-05-09
-       //DebugSensor("\r\n Sensor.st_RunData.GasReading = %d",Sensor.st_RunData.GasReading);
 
-      //  //DebugSensor("\r\n Sensor.st_RunData.Sentatus_bit.SS_WARMUP = %d",Sensor.st_RunData.Sentatus_bit.SS_WARMUP);
-      //  if(Sensor.st_RunData.GasReading < 0){
-      //      U32_PidReading =0;    
-      //  }
-      //  U32_PidReading = Sensor.st_RunData.GasReading ;
-      //  if(Sensor.st_RunData.Sentatus_bit.SS_WARMUP == 1){
-      //      U32_PidReading =0;    
-      //  }
-      //  DebugSensor("\r\n U32_PidReading = %d",U32_PidReading);
        // Raw count
        Sensor.st_RunData.SensorRawCount.SenRawCountNum     = rcs->DataBuf[i ++];
        for(j =0;j < Sensor.st_RunData.SensorRawCount.SenRawCountNum;j++){
@@ -150,8 +136,7 @@ static void Sensor_GetDataPackResp(RCS_t *rcs)
            Sensor.st_RunData.SensorRawCount.SenRawCount[j] += rcs->DataBuf[i ++];
            Sensor.st_RunData.SensorRawCount.SenRawCount[j] <<=8;
            Sensor.st_RunData.SensorRawCount.SenRawCount[j] += rcs->DataBuf[i ++]; 
-           DebugSensor("\r\n SenRawCount[%d]= %ld",j,Sensor.st_RunData.SensorRawCount.SenRawCount[j]);
-       }
+        }
        // Temperature
        Sensor.st_RunData.Temperature  = rcs->DataBuf[i ++];
        Sensor.st_RunData.Humidity     = rcs->DataBuf[i ++];
@@ -577,7 +562,6 @@ static void Sensor_UserCalResp(RCS_t *rcs)
 }
 static void Sensor_GetSpanHCalibrationResp(RCS_t *rcs)
 {
-  // DebugSensor("\r\n Sensor_GetFwVerResp");
   //Fw Model name max lentg is 20
   INT8U i = 0;
   if(rcs->DataLen ==1 ){

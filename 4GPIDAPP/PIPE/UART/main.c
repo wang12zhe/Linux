@@ -21,8 +21,13 @@ unsigned char ReceFlag =0;
 MSG SysMsg;
 
 unsigned char ReteyCnt =5;
-int fdwr =-1;
-int fdrd =-1;
+
+
+
+struct FDStruct{
+    int fdwr;
+    int fdrd;
+};
 /* 毫秒级 延时 */
 void mssleep(int ms)
 {
@@ -33,18 +38,12 @@ void mssleep(int ms)
 
 }
 
-
-// struct Command Cmd[] ={
-// {'A',"Get Firmware Version",Sensor_Init}
-// };
-
 INT8U SendData(struct Command Cmd){
     INT8U ReteyCnt = 5;
-    
     do{
         Cmd.fp_Action(Cmd.Parameter);
         TM_Delay(DELAY_1S);
-        ReteyCnt  =0;
+        ReteyCnt --;
     }while(ReteyCnt > 0);
 
     return ReteyCnt;
@@ -65,49 +64,48 @@ INT8U InitializeSensor(void){
 
 void Mysleep(INT16U time){
     do {
-        time = sleep(time); 
-        //printf("time =%d",time);  
+        time = sleep(time);  
     }while(time > 0);
 }
 
 
-void ParserCommand(int fdwr,int fdrd){
+void ParserCommand(void *arg){
 
    char ReadStr[50];
    unsigned int i=0;
    char *len;
    unsigned char j=0;
-   SCDC_SensorResp_Init(fdrd);
-   SCDC_SensorHost_Init(fdwr);
+   struct FDStruct PIPI_fd = *(struct FDStruct *)arg;
+   SCDC_SensorResp_Init(PIPI_fd.fdrd);
+   SCDC_SensorHost_Init(PIPI_fd.fdwr);
    InitializeSensor();
     while(1){
         ShowTime();
-        SendData(SensorTable[SensorTableTotal -1]);
-        Mysleep(1);
+        //SendData(SensorTable[SensorTableTotal -1]);
+        sleep(1);
     }
 }
 
-void ReadData(int signal_no){
+void ReadData(void *arg){
     int len =0;
     char i =0;
     char ch;
     RCS_t *rcs;
     unsigned char buff[255];
-    if(signal_no == SIGUSR1){
-        len = read(fdrd,buff,sizeof(buff)/sizeof(buff[0]));
+    int fd = *(int *)arg;
+    while(1){
+        len = read(fd,buff,sizeof(buff)/sizeof(buff[0]));
         if(len > 0){
             rcs = &SCDC_SensorResp;
             for(i =0;i < len;i ++){
                 ch = buff[i];
                 RCS_Parser(rcs, ch);
                 if (rcs->PacketFlags_bit.PF_ACTION) {
-                    //printf("RCS_Action \n ");
                     RCS_Action( rcs );
                     ReteyCnt=0;
                 }
             }
         }
-	    fflush(stdout);
     }
 }
 
@@ -121,22 +119,23 @@ int main(int argc, char **argv)
 {
     char Str1[4];
     char Str2[4];
+
     pid_t pid;
     pid_t ppid;
+    int err;  
+    pthread_t ntid1,ntid2;
     int fd_Write[2];    // Father write child read
     int fd_Read[2];    // Father Read child Write
+
+    struct FDStruct PIPE_fd;
+
     if(argc != 1){  
         printf("=========================\n");  
         printf("Usage: %s   \n",argv[0]);
         printf("=========================\n");
         exit(1);   
     } 
-    //为两个信号设置信号处理函数
-    if(signal(SIGUSR1, ReadData) == SIG_ERR){ //设置出错
-        perror("Can't set handler for SIGUSR1\n");
-        exit(1);
-    }
-        //为两个信号设置信号处理函数
+    //为信号设置信号处理函数
     if(signal(SIGCHLD, CatchCrash) == SIG_ERR){ //设置出错
         perror("Can't set handler for SIGCHLD\n");
         exit(1);
@@ -151,36 +150,52 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-
     if((pid = fork()) <0){
         perror("Fail to fork");
         exit(1);
     }else if(pid > 0){   //Father
         close(fd_Write[0]);   //close Write
         close(fd_Read[1]);    //close read
-        // printf("fd_Write[1] =  fd_Read[0] =\n");
-        // printf("fd_Write[1] = %d fd_Read[0] =%d\n",fd_Write[1],fd_Read[0]);
-        // printf("fd_Write[0] = %d fd_Read[1] =%d\n",fd_Write[0],fd_Read[1]);
-        fdrd = fd_Read[0];
-        fdwr = fd_Write[1];
-        ParserCommand(fd_Write[1],fd_Read[0]);
+
+        PIPE_fd.fdrd = fd_Read[0];
+        PIPE_fd.fdwr = fd_Write[1];
+ 
+        err = pthread_create(&ntid1, NULL, (void *)ReadData, (&PIPE_fd.fdrd));
+        if (err != 0){
+            perror("can't create thread");     
+        } 
+        err = pthread_create(&ntid2, NULL, (void *)ParserCommand, (&PIPE_fd));
+        if (err != 0){
+            perror("can't create thread");     
+        } 
+        
+        if(ntid1 !=0) {
+            printf("ntid1\n");
+            pthread_join(ntid1,NULL);
+        }
+        if(ntid2 !=0) {
+            printf("ntid1\n");
+            pthread_join(ntid2,NULL);
+        }
+
+        close(fd_Write[1]);   
+        close(fd_Read[0]);    
         exit(0);
     }else{   //Children
-        close(fd_Write[1]);   //close Read
-        close(fd_Read[0]);    //close read
+        close(fd_Write[1]);   
+        close(fd_Read[0]);   
         ppid = getppid();
-        //printf("222 PPID =%d \n",ppid);
+
         prctl(PR_GET_PDEATHSIG , SIGHUP);
-        // printf("Start ChildRen ！\n");
-        // printf("fd_Write[0] = %d fd_Read[1] =%d\n",fd_Write[0],fd_Read[1]);
+
         system("pwd");
         sprintf(Str1,"%d",fd_Write[0]);
         sprintf(Str2,"%d",fd_Read[1]);
-        execl("../uartDriver/usart","/dev/ttyUSB0",Str1,Str2,NULL);
+        execl("bin/usart","/dev/ttyUSB0",Str1,Str2,NULL);
+
+        close(fd_Write[0]);  
+        close(fd_Read[1]);
         exit(0);
     }
-   
-    close(fdrd);
-    close(fdwr);
     return 0;
 }

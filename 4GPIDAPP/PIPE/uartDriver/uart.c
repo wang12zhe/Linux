@@ -12,8 +12,8 @@
  *                 
  ********************************************************************************/
  
-#include"uart.h"
-#include "Debug.h"
+#include"includes.h"
+
 /*******************************************************************  
 *名称：             UART0_Open  
 *功能：             打开串口并返回串口设备文件描述  
@@ -23,7 +23,7 @@
 *******************************************************************/    
 int UART0_Open(int fd,char*port)
 {    
-    fd = open( port, O_RDWR|O_NOCTTY|O_NDELAY);    
+    fd = open( port, O_RDWR|O_NOCTTY);    
     if (fd<0)    
     {    
         perror("Can't Open Serial Port");    
@@ -232,40 +232,40 @@ int UART0_Init(int fd, int speed,int flow_ctrl,int databits,int stopbits,int par
     }    
 }    
      
-/*******************************************************************  
-* 名称：            UART0_Recv  
-* 功能：            接收串口数据  
-* 入口参数：        fd         文件描述符      
-*                   rcv_buf    接收串口中数据存入rcv_buf缓冲区中  
-*                   data_len   一帧数据的长度  
-* 出口参数：        正确返回为1，错误返回为0  
-*******************************************************************/    
-int UART0_Recv(int fd, char *rcv_buf,int data_len)    
-{    
-    int len,fs_sel;    
-    fd_set fs_read;    
+// /*******************************************************************  
+// * 名称：            UART0_Recv  
+// * 功能：            接收串口数据  
+// * 入口参数：        fd         文件描述符      
+// *                   rcv_buf    接收串口中数据存入rcv_buf缓冲区中  
+// *                   data_len   一帧数据的长度  
+// * 出口参数：        正确返回为1，错误返回为0  
+// *******************************************************************/    
+// int UART0_Recv(int fd, char *rcv_buf,int data_len)    
+// {    
+//     int len,fs_sel;    
+//     fd_set fs_read;    
        
-    struct timeval time;    
+//     struct timeval time;    
        
-    FD_ZERO(&fs_read);    
-    FD_SET(fd,&fs_read);    
+//     FD_ZERO(&fs_read);    
+//     FD_SET(fd,&fs_read);    
        
-    time.tv_sec = 10;    
-    time.tv_usec = 0;    
+//     time.tv_sec = 10;    
+//     time.tv_usec = 0;    
        
-    //使用select实现串口的多路通信    
-    fs_sel = select(fd+1,&fs_read,NULL,NULL,&time);    
-    //printf("fs_sel = %d\n",fs_sel);    
-    if(fs_sel)    
-    {    
-        len = read(fd,rcv_buf,data_len);    
-        return len;    
-    }    
-    else    
-    {    
-        return FALSE;    
-    }         
-}    
+//     //使用select实现串口的多路通信    
+//     fs_sel = select(fd+1,&fs_read,NULL,NULL,&time);    
+//     //printf("fs_sel = %d\n",fs_sel);    
+//     if(fs_sel)    
+//     {    
+//         len = read(fd,rcv_buf,data_len);    
+//         return len;    
+//     }    
+//     else    
+//     {    
+//         return FALSE;    
+//     }         
+// }    
 /********************************************************************  
 * 名称：            UART0_Send  
 * 功能：            发送数据  

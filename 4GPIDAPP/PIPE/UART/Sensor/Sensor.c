@@ -94,26 +94,15 @@ INT8U CommHandler_SCDCSensrHost(RCS_t *rcs)
     return(1);
 }
 
-INT8U CommHandler_SCDCSensrResp(RCS_t *rcs)
-{
-    INT8U ch;
-    INT8U len;
-    INT8U u8_i = 0;
+// INT8U CommHandler_SCDCSensrResp(RCS_t *rcs)
+// {
+//     INT8U ch;
+//     INT8U len;
+//     INT8U u8_i = 0;
 
-    // UARText_RX_Handle();
-    // len =  UARText_Get_RXCount() ;
-    // while (len--) {
-    //     ch = UARText_Getc();
-    //     DebugSensor(" %02X",ch);
-    //     RCS_Parser(rcs, ch);
-    //     if (rcs->PacketFlags_bit.PF_ACTION) {
-    //         RCS_Action( rcs );
-    //         return(1);
-    //     }
-    // }
 
-    return(1);
-}
+//     return(1);
+// }
 
 static INT8U  Sensor_GetFwVer(INT8U SensorIndex)
 {
@@ -1012,13 +1001,6 @@ static INT8U Sensor_GoToMode(INT8U Mode)
 //                                         Sensor.st_SenInfo.UnitCode
 //                                         );
 //     Sensor_SeSpanCalibrationFlag(SENINDEX,Cfg.U8_3PointCal);                 
-//     DebugSensor(" \r\n Sensor.st_SenInfo.UnitCode = %d",Sensor.st_SenInfo.UnitCode);
-//     DebugSensor(" \r\n Sensor.st_RunData.SpanValue = %d",Sensor.st_RunData.SpanValue);
-//     DebugSensor(" \r\n Sensor.st_RunData.HightAlarmValue = %d",Sensor.st_RunData.HightAlarmValue);
-//     DebugSensor(" \r\n Sensor.st_RunData.LowAlarmValue = %d",Sensor.st_RunData.LowAlarmValue);
-//     DebugSensor(" \r\n Sensor.st_RunData.SpanHValue = %d",Sensor.st_RunData.SpanHValue);
-//     DebugSensor(" \r\n Sensor.st_RunData.STELAlarmValue = %d",Sensor.st_RunData.STELAlarmValue);
-//     DebugSensor(" \r\n Sensor.st_RunData.TWAAlarmValue = %d",Sensor.st_RunData.TWAAlarmValue);
 
 // /*
 //     //Save bump time to sensor

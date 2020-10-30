@@ -30,7 +30,7 @@
 #include "./Sensor/Sensor.h"
 #include "./Sensor/SenRelatedDef.h"
 #include "./Misc/SysMsg.h"
-#include "./Misc/Debug.h"
+#include "./../Debug.h"
 #include "./Misc/ShowTime.h"
 
 #define SUCCESS                        1
@@ -38,13 +38,5 @@
 
 #define SUCC                           0
 
-#if DEBUG_SENSOR
-#define DebugSensor(...)		  {      \
-if(SysMsg.CommFlags_bit.Charging == 0)    \
-    printf(__VA_ARGS__);                   \
-} 
-#else
-#define DebugSensor(...)
-#endif
 
 #endif

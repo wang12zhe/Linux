@@ -1,10 +1,10 @@
 
 /*********************************************************************************
- *      Copyright:  (C) 2018 Yujie
+ *      Copyright:  (C) 
  *                  All rights reserved.
  *
  *       Filename:  usart_test.c
- *    Description:  串口测试
+ *    Description:  UART driver
  *                 
  *        Version:  1.0.0(08/27/2018)
  *         Author:  yanhuan <yanhuanmini@foxmail.com>
@@ -12,20 +12,8 @@
  *                 
  ********************************************************************************/
  
-#include "uart.h"
-#include<stdio.h>      /*标准输入输出定义*/    
-#include<stdlib.h>     /*标准函数库定义*/    
-#include<unistd.h>     /*Unix 标准函数定义*/    
-#include<sys/types.h>     
-#include<sys/stat.h>       
-#include<fcntl.h>      /*文件控制定义*/    
-#include<termios.h>    /*PPSIX 终端控制定义*/    
-#include<errno.h>      /*错误号定义*/    
-#include<string.h>
-#include <pthread.h>
-#include <signal.h>
-#include "Debug.h"
-pthread_mutex_t mut;
+#include "includes.h"
+
 unsigned char RetryFlag =0;
 unsigned char ReceFlag =0;
 struct Command{
@@ -73,13 +61,12 @@ void SendData(void *arg){
         //printf("FD.FIFO_Fdrd =%d",FD.FIFO_Fdrd);
         len = read(FD.FIFO_Fdrd,buff,sizeof(buff)/sizeof(buff[0]));
         int RetryCnt =1;
-    #if DEBUG
-        printf("TX: \n");
+    #if DEBUGUART
+        DebugUart("TX: \n");
 
         for(i =0;i < len;i ++){
-            printf("%02X ",buff[i]);
+            DebugUart("%02X ",buff[i]);
         }
-        printf("\nRX:\n");
     #endif
         if(len > 0){
             UART0_Send(FD.Uart_Fd,buff,len);
@@ -93,22 +80,21 @@ void Receive (void *arg){
     unsigned char rcv_buf[256];
     struct FDStr FD = *(struct FDStr *)arg;
     while (1) {  //循环读取数据
-       // memset(rcv_buf,0,256);      
-        len = UART0_Recv(FD.Uart_Fd, rcv_buf,sizeof(rcv_buf)); 
+        bzero(rcv_buf,256); 
+   
+        len = read(FD.Uart_Fd, rcv_buf,sizeof(rcv_buf)); 
+        //read(fd,rcv_buf,data_len);
         ReceFlag =1;
         if(len > 0){    
-        //#if DEBUG
+        #if DEBUGUART
+            DebugUart("\nRX:\n");
             for(i =0;i < len;i ++){
-                printf("%02X ",rcv_buf[i]);
+                DebugUart("%02X ",rcv_buf[i]);
             }
-       // #endif
             fflush(stdout);
-            write(FD.FIFO_Fdwr,rcv_buf, len);   
-
-            if(kill(FD.ppid, SIGUSR1) == -1){
-                perror("fail to send signal\n");
-                exit(1);
-            } 
+        #endif
+            
+            write(FD.FIFO_Fdwr,rcv_buf, len);    
         }    
         else{  
         }                   
@@ -117,8 +103,8 @@ void Receive (void *arg){
 //start gdbserver on linux: gdbserver localhost:1234 /home/a123/UART/usart /dev/ttyS0
 int main(int argc, char **argv)    
 {
-	int fd = -1;           //文件描述符，先定义一个与程序无关的值，防止fd为任意值导致程序出bug    
-    int err;               //返回调用函数的状态    
+	int fd = -1;          
+    int err;            
     int len;                            
     int i;    
     pthread_t	ntid1,ntid2;
@@ -127,10 +113,10 @@ int main(int argc, char **argv)
     int FIFO_fdrd = -1;
     pid_t ppid;
 
-    printf(" \n argc =%d \n",argc);
-    printf("argv 0=%s \n",argv[0]);
-    printf("argv 1=%s \n",argv[1]);
-    printf("argv 2=%s \n",argv[2]); 
+    Debug(" \n argc =%d \n",argc);
+    Debug("argv 0=%s \n",argv[0]);
+    Debug("argv 1=%s \n",argv[1]);
+    Debug("argv 2=%s \n",argv[2]); 
 
     if(argc != 3)    
     {  
@@ -140,15 +126,7 @@ int main(int argc, char **argv)
         return FALSE;    
     }  
     ppid = getppid();
-    printf("PPID =%d \n",ppid);
-    // if((FIFO_fdrd = open(argv[1],O_RDONLY)) < 0){
-    //     perror(" Father : Open WriteFIFO error");
-    //     exit(1);
-    // }
-    // if((FIFO_fdwr = open(argv[2],O_WRONLY)) < 0){
-    //     perror(" Father : Open ReadFIFO error");
-    //     exit(1);
-    // }
+    Debug("PPID =%d \n",ppid);
 
      fd = UART0_Open(fd,argv[0]); //打开串口，返回文件描述符   ls 
      do{    
@@ -156,13 +134,11 @@ int main(int argc, char **argv)
         printf("Set Port Exactly!\n"); 
         sleep(1);   
     }while(FALSE == err || FALSE == fd);    
-    
-    pthread_mutex_init(&mut,NULL);
 	
     FD.Uart_Fd = fd;
     FD.FIFO_Fdrd = atoi(argv[1]);
     FD.FIFO_Fdwr = atoi(argv[2]);
-    printf("FD.FIFO_Fdrd = %d ,FD.FIFO_Fdwr = %d \n",FD.FIFO_Fdrd,FD.FIFO_Fdwr);
+    Debug("FD.FIFO_Fdrd = %d ,FD.FIFO_Fdwr = %d \n",FD.FIFO_Fdrd,FD.FIFO_Fdwr);
     FD.ppid = ppid;
     err = pthread_create(&ntid1, NULL, (void *)SendData, (&FD));
 	if (err != 0){
