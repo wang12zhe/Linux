@@ -1,0 +1,2 @@
+MFG tool是开源的，可以自己设计自己的工具
+参考 https://blog.csdn.net/weixin_30466421/article/details/95962504

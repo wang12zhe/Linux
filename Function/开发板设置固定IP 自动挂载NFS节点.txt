@@ -1,0 +1,12 @@
+在/etc/rc.local文件开头增加以下内容(设置IP，挂载远程节点)
+
+sleep 5
+ifconfig eth0 192.168.11.57
+sh /home/root/nfsShare.sh
+
+
+在/home/root/下新建 nfsShare.sh文件内容如下
+#!/bin/sh
+
+mount -t nfs -o nolock,nfsvers=3 192.168.11.119:/home/owen/nfs /mnt/nfs/
+

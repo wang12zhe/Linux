@@ -1,0 +1,19 @@
+提交代码
+进入源码目录
+git add .  (提交所有变化，也可以指定对应文件)
+git commit -m "提交代码的log"
+git push -u origin master
+
+
+
+下载代码：
+
+
+自动记录用户名和密码：
+git config --global user.name "E828374"
+git config --global user.email "zy_fever@163.com"
+git init
+
+git clone https://gitee.com/e828374/uboot
+
+参考地址：https://www.cnblogs.com/duanming/p/11830252.html

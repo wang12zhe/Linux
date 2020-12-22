@@ -1,0 +1,373 @@
+USB 作为从设备属于linux USB de Gadget范畴
+参考资料：
+1. http://blog.chinaunix.net/uid-23373524-id-2426995.html
+2. https://blog.csdn.net/yytyu2017/article/details/104226141
+3.https://blog.csdn.net/yazhouren/article/details/80196344
+
+
+
+1. 首先实现ALIENTEK OTG 连接PC后设备管理器有反应
+   将Gadget Zero编译成模块
+   Gadget Zero 路径：
+   -> Device Drivers 
+      -> USB support 
+         -> USB Gadget Support 
+             ->Serial Gadget(with CDC ACM and CDC OBEX support)
+   
+   1. 编译拷贝模块：make modules && make modules_install INSTALL_MOD_PATH=~/rootfs
+   2. 将~/rootfs/libmodule/xxxxx/文件夹下的所有东西拷贝到开发板的/lib/modules/xxxxx/下			
+   3. modprobe g_serial use_acm=0        ///////use_acm=0 代表普的USB设备， use_acm=1 代表USB转串口
+
+   
+   当执行modprobe g_serial use_acm=1 
+	   1. 会在在开发版的上会新增节点/dev/ttyGSx
+	   2. 开发板OTG接到Winowns, Com口
+
+   
+   当执行modprobe g_serial use_acm=0
+   1. 会在在开发版的上会新增节点/dev/ttyGSx
+   2. 开发板OTG接到Winowns, PC的设备管理器里多一个driver,但目前不清楚如何和这个USB设备通通信
+   3. 开发板OTG接uBUNTU 使用lsusb查看会多一个：  
+       Bus 003 Device 002: ID 0525:a4a6 Netchip Technology, Inc. Linux-USB Serial Gadget
+	   
+	     执行   echo 0x0525 0xA4A6 >/sys/bus/usb-serial/drivers/generic/new_id
+         或者   modprobe usbserial vendor=0x0525 product=0xA4A6
+		 其中的vendor=0x0525 product=0xA4A6 代表USB 的VID 和PID
+	     会在Ubuntu上生成/dev/ttyUSBx 节点
+		 
+
+    注意，这样得到的节点发送数据的时候必须以\n结束，否则数据被放入缓存，不发送出来
+	   
+	   
+	   
+HID (鼠标键盘，但是怎么操作暂时未知)
+参考 https://blog.csdn.net/gcq19961204/article/details/108547809:
+修改内容如下：
+diff --git a/kernel/drivers/usb/gadget/legacy/hid.c b/kernel/drivers/usb/gadget/legacy/hid.c
+old mode 100644
+new mode 100755
+index 7e5d2c484..addffae56
+--- a/kernel/drivers/usb/gadget/legacy/hid.c
++++ b/kernel/drivers/usb/gadget/legacy/hid.c
+@@ -31,6 +31,56 @@
+ 
+ /*-------------------------------------------------------------------------*/
+ 
++/*--------------------------add by guchunqi begin--------------------------*/
++static struct hidg_func_descriptor my_hid_data =
++{
++    .subclass           = 0, /* No subclass */
++    .protocol           = 0, /* Keyboard */
++    .report_length      = 8,
++    .report_desc_length = 52,
++    .report_desc        =
++    {
++        0x06, 0xA0, 0xFF,   //用法页(FFA0h, vendor defined)
++        0x09, 0x01,         //用法(vendor defined)
++        0xA1, 0x01,         //集合(Application)
++        0x09, 0x02,         //用法(vendor defined)
++        0xA1, 0x00,         //集合(Physical)
++        0x06, 0xA1, 0xFF,   //用法页(vendor defined)
++//输入报告
++        0x09, 0x03,         //用法(vendor defined)
++        0x09, 0x04,         //用法(vendor defined)
++        0x15, 0x80,         //逻辑最小值(0x80 or -128)
++        0x25, 0x7F,         //逻辑最大值(0x7F or 127)
++        0x35, 0x00,         //物理最小值(0)
++        0x45, 0xFF,         //物理最大值(255)
++        0x75, 0x08,         //报告长度Report size (8位)
++        0x95, 0x40,         //报告数值(64 fields)
++        0x81, 0x02,         //输入(data, variable, absolute)
++//输出报告
++        0x09, 0x05,         //用法(vendor defined)
++        0x09, 0x06,         //用法(vendor defined)
++        0x15, 0x80,         //逻辑最小值(0x80 or -128)
++        0x25, 0x7F,         //逻辑最大值(0x7F or 127)
++        0x35, 0x00,         //物理最小值(0)
++        0x45, 0xFF,         //物理最大值(255)
++        0x75, 0x08,         //报告长度(8位)
++        0x95, 0x40,         //报告数值(64 fields)
++        0x91, 0x02,         //输出(data, variable, absolute)
++        0xC0,               //集合结束(Physical)
++        0xC0                //集合结束(Application)
++    }
++};
++
++static struct platform_device my_hid =
++{
++    .name               = "hidg",
++    .id                 = 0,
++    .num_resources      = 0,
++    .resource           = 0,
++    .dev.platform_data  = &my_hid_data,
++};
++/*--------------------------add by guchunqi end----------------------------*/
++
+ struct hidg_func_node {
+        struct usb_function_instance *fi;
+        struct usb_function *f;
+@@ -280,6 +330,15 @@ static int __init hidg_init(void)
+ {
+        int status;
+ 
++/*--------------------add by guchunqi begin------------------------*/
++    printk("********************enter hid**********************\r\n");
++    status = platform_device_register(&my_hid);
++    if (status < 0)
++    {
++        return status;
++    }
++/*--------------------add by guchunqi end--------------------------*/
++
+        status = platform_driver_probe(&hidg_plat_driver,
+                                hidg_plat_driver_probe);
+        if (status < 0)
+@@ -297,5 +356,11 @@ static void __exit hidg_cleanup(void)
+ {
+        usb_composite_unregister(&hidg_driver);
+        platform_driver_unregister(&hidg_plat_driver);
++
++/*--------------------add by guchunqi begin------------------------*/
++    platform_device_unregister(&my_hid);
++    printk("********************out hid************************\r\n");
++/*--------------------add by guchunqi end--------------------------*/
++
+ }
+ module_exit(hidg_cleanup);
+
+在开发板上生成节点：/dev/hidg0
+连接Ubuntu系统：
+    生成设备节点 ：/dev/hidraw0
+        测试：开发板上cat /dev/hidg0   Ubuntu上：echo 1234 > /dev/hidraw0
+
+    此时使用USB-HID-TEST 调试助手测试接收和发送并用Device Monitoring Studio 抓取数据包
+	注意:当开发板向USB-HID-TEST发送小于64个字节的时候，USB-HID-TEST 不显示接收的数据，这时候可以看抓包数据
+
+    此时测试使用cat 1.rfp >/dev/hidg0 发现2M左右额文件，需要4分钟，
+	将    .report_length      = 8,改成+    .report_length      = 32,发送2M的文件需要1分钟,
+	将    .report_length      = 8,改成+    .report_length      = 64,发送2M的文件需要30S,
+	
+	经测试 report_length/report_desc_length/report_desc 三者的关系为：
+	1. report_desc_length 代表report_desc里的字节数
+	2. report_desc里的报告数值应该是report_length的整数倍
+	
+	
+	
+修改Endpoint 的Interval :(修改 Interval 也会明显加快传输速度)
+  修改  f_hid.c里对应的定义
+
+修改以下内容能修改USB设备显示的信息：
+/* string IDs are assigned dynamically */
+static struct usb_string strings_dev[] = {
+	[USB_GADGET_MANUFACTURER_IDX].s = "123",
+	[USB_GADGET_PRODUCT_IDX].s = DRIVER_DESC,
+	[USB_GADGET_SERIAL_IDX].s = "6789",
+	{  } /* end of list */
+};
+	
+	
+	
+	
+    
+	
+
+	
+Ubuntu下查看USB 信息命令 (相关命令需要管理员权限)：
+cat /sys/kernel/debug/usb/devices
+
+Ubuntu USB 抓包(相关命令需要管理员权限)：https://blog.csdn.net/faithzzf/article/details/60958858
+参考文档: \Documentation\usb\usbmon.txt
+
+
+lsusb -v 将列出USB的详细信息
+
+
+
+Linux下USB HID device driver研究 https://blog.csdn.net/gjsisi/article/details/76705
+USB 协议分析之 HID 设备 :https://blog.csdn.net/zhoutaopower/article/details/82469665
+
+
+
+
+工具:
+USBTreeView
+
+
+
+将开发板识别成键盘和鼠标的符合设备,修改成以下内容即可：
+/* hid descriptor for a keyboard */
+static struct hidg_func_descriptor my_hid_data =
+{
+    .subclass           = 0, /* No subclass */
+    .protocol           = 1, /* Keyboard */
+    .report_length      = 8,
+    .report_desc_length = 119,
+    .report_desc        =
+    {
+//         0x06, 0xA0, 0xFF,   //用法页(FFA0h, vendor defined)
+//         0x09, 0x01,         //用法(vendor defined)
+//         0xA1, 0x01,         //集合(Application)
+//         0x09, 0x02,         //用法(vendor defined)
+
+//         0xA1, 0x00,         //集合(Physical)
+//         0x06, 0xA1, 0xFF,   //用法页(vendor defined)
+// //输入报告
+//         0x09, 0x03,         //用法(vendor defined)
+//         0x09, 0x04,         //用法(vendor defined)
+//         0x15, 0x80,         //逻辑最小值(0x80 or -128)
+//         0x25, 0x7F,         //逻辑最大值(0x7F or 127)
+//         0x35, 0x00,         //物理最小值(0)
+//         0x45, 0xFF,         //物理最大值(255)
+//         0x75, 0x08,         //报告长度Report size (8位)
+//         0x95, 0x40,         //报告数值(64 fields)
+//         0x81, 0x02,         //输入(data, variable, absolute)
+// //输出报告
+//         0x09, 0x05,         //用法(vendor defined)
+//         0x09, 0x06,         //用法(vendor defined)
+//         0x15, 0x80,         //逻辑最小值(0x80 or -128)
+//         0x25, 0x7F,         //逻辑最大值(0x7F or 127)
+//         0x35, 0x00,         //物理最小值(0)
+//         0x45, 0xFF,         //物理最大值(255)
+//         0x75, 0x08,         //报告长度(8位)
+//         0x95, 0x40,         //报告数值(64 fields)
+//         0x91, 0x02,         //输出(data, variable, absolute)
+
+//         0xC0,               //集合结束(Physical)
+//         0xC0,                //集合结束(Application)
+
+
+
+//-------------键盘部分报告描述符----------------  
+    //表示用途页为通用桌面设备  
+    0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)  
+  
+    //表示用途为键盘  
+    0x09, 0x06,                    // USAGE (Keyboard)  
+       
+    //表示应用集合，必须要以END_COLLECTION来结束它，见最后的END_COLLECTION  
+    0xa1, 0x01,                    // COLLECTION (Application)  
+       
+    //报告ID（报告ID 0是保留的）  
+    0x85, 0x01, //Report ID (1)  
+       
+    //表示用途页为按键  
+    0x05, 0x07,                    //   USAGE_PAGE (Keyboard)  
+  
+    //用途最小值，这里为左ctrl键  
+    0x19, 0xe0,                    //   USAGE_MINIMUM (Keyboard LeftControl)  
+    //用途最大值，这里为右GUI键，即window键  
+    0x29, 0xe7,                    //   USAGE_MAXIMUM (Keyboard Right GUI)  
+    //逻辑最小值为0  
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)  
+    //逻辑最大值为1  
+    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)  
+    //报告大小（即这个字段的宽度）为1bit，所以前面的逻辑最小值为0，逻辑最大值为1  
+    0x75, 0x01,                    //   REPORT_SIZE (1)  
+    //报告的个数为8，即总共有8个bits  
+    0x95, 0x08,                    //   REPORT_COUNT (8)  
+    //输入用，变量，值，绝对值。像键盘这类一般报告绝对值，  
+    //而鼠标移动这样的则报告相对值，表示鼠标移动多少  
+    0x81, 0x02,                    //   INPUT (Data,Var,Abs)  
+    //上面这这几项描述了一个输入用的字段，总共为8个bits，每个bit表示一个按键  
+    //分别从左ctrl键到右GUI键。这8个bits刚好构成一个字节，它位于报告的第一个字节。  
+    //它的最低位，即bit-0对应着左ctrl键，如果返回的数据该位为1，则表示左ctrl键被按下，  
+    //否则，左ctrl键没有按下。最高位，即bit-7表示右GUI键的按下情况。中间的几个位，  
+    //需要根据HID协议中规定的用途页表（HID Usage Tables）来确定。这里通常用来表示  
+    //特殊键，例如ctrl，shift，del键等   
+  
+    //这样的数据段个数为1  
+    0x95, 0x01,                    //   REPORT_COUNT (1)  
+    //每个段长度为8bits  
+    0x75, 0x08,                    //   REPORT_SIZE (8)  
+    //输入用，常量，值，绝对值  
+    0x81, 0x03,                    //   INPUT (Cnst,Var,Abs)  
+       
+    //上面这8个bit是常量，设备必须返回0  
+  
+    //这样的数据段个数为5  
+    0x95, 0x05,                    //   REPORT_COUNT (5)  
+    //每个段大小为1bit  
+    0x75, 0x01,                    //   REPORT_SIZE (1)  
+    //用途是LED，即用来控制键盘上的LED用的，因此下面会说明它是输出用  
+    0x05, 0x08,                    //   USAGE_PAGE (LEDs)  
+    //用途最小值是Num Lock，即数字键锁定灯  
+    0x19, 0x01,                    //   USAGE_MINIMUM (Num Lock)  
+    //用途最大值是Kana，这个是什么灯我也不清楚^_^  
+    0x29, 0x05,                    //   USAGE_MAXIMUM (Kana)  
+    //如前面所说，这个字段是输出用的，用来控制LED。变量，值，绝对值。  
+    //1表示灯亮，0表示灯灭  
+    0x91, 0x02,                    //   OUTPUT (Data,Var,Abs)  
+  
+    //这样的数据段个数为1  
+    0x95, 0x01,                    //   REPORT_COUNT (1)  
+    //每个段大小为3bits  
+    0x75, 0x03,                    //   REPORT_SIZE (3)  
+    //输出用，常量，值，绝对  
+    0x91, 0x03,                    //   OUTPUT (Cnst,Var,Abs)      
+    //由于要按字节对齐，而前面控制LED的只用了5个bit，  
+    //所以后面需要附加3个不用bit，设置为常量。  
+    
+  
+    //报告个数为6  
+    0x95, 0x06,                    //   REPORT_COUNT (6)  
+    //每个段大小为8bits  
+    0x75, 0x08,                    //   REPORT_SIZE (8)  
+    //逻辑最小值0  
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)  
+    //逻辑最大值255  
+    0x25, 0xFF,                    //   LOGICAL_MAXIMUM (255)  
+    //用途页为按键  
+    0x05, 0x07,                    //   USAGE_PAGE (Keyboard)  
+    //使用最小值为0  
+    0x19, 0x00,                    //   USAGE_MINIMUM (Reserved (no event indicated))  
+    //使用最大值为0x65  
+    0x29, 0x65,                    //   USAGE_MAXIMUM (Keyboard Application)  
+    //输入用，变量，数组，绝对值  
+    0x81, 0x00,                    //   INPUT (Data,Ary,Abs)  
+    //以上定义了6个8bit宽的数组，每个8bit（即一个字节）用来表示一个按键，所以可以同时  
+    //有6个按键按下。没有按键按下时，全部返回0。如果按下的键太多，导致键盘扫描系统  
+    //无法区分按键时，则全部返回0x01，即6个0x01。如果有一个键按下，则这6个字节中的第一  
+    //个字节为相应的键值（具体的值参看HID Usage Tables），如果两个键按下，则第1、2两个  
+    //字节分别为相应的键值，以次类推。  
+  
+    //关集合，跟上面的对应  
+    0xc0 ,                          // END_COLLECTION  
+       
+ //-----------------------鼠标部分报告描述符----------------------------  
+    0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)  
+    0x09, 0x02,                    // USAGE (Mouse)  
+    0xa1, 0x01,                    // COLLECTION (Application)  
+    0x85, 0x02,            // 报告ID (2)  
+    0x09, 0x01,                    //   USAGE (Pointer)  
+    0xa1, 0x00,                    //   COLLECTION (Physical)  
+    0x05, 0x09,                    //     USAGE_PAGE (Button)  
+    0x19, 0x01,                    //     USAGE_MINIMUM (Button 1)  
+    0x29, 0x03,                    //     USAGE_MAXIMUM (Button 3)  
+    0x15, 0x00,                    //     LOGICAL_MINIMUM (0)  
+    0x25, 0x01,                    //     LOGICAL_MAXIMUM (1)  
+    0x95, 0x03,                    //     REPORT_COUNT (3)  
+    0x75, 0x01,                    //     REPORT_SIZE (1)  
+    0x81, 0x02,                    //     INPUT (Data,Var,Abs)  
+    0x95, 0x01,                    //     REPORT_COUNT (1)  
+    0x75, 0x05,                    //     REPORT_SIZE (5)  
+    0x81, 0x03,                    //     INPUT (Cnst,Var,Abs)  
+    0x05, 0x01,                    //     USAGE_PAGE (Generic Desktop)  
+    0x09, 0x30,                    //     USAGE (X)  
+    0x09, 0x31,                    //     USAGE (Y)  
+    0x09, 0x38,                    //     USAGE (Wheel)  
+    0x15, 0x81,                    //     LOGICAL_MINIMUM (-127)  
+    0x25, 0x7f,                    //     LOGICAL_MAXIMUM (127)  
+    0x75, 0x08,                    //     REPORT_SIZE (8)  
+    0x95, 0x03,                    //     REPORT_COUNT (3)  
+    0x81, 0x06,                    //     INPUT (Data,Var,Rel)  
+    0xc0,                          //   END_COLLECTION  
+    0xc0                           // END_COLLECTION  		
+    }
+};
+
+
+
+
+
+
+   

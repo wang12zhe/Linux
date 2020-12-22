@@ -1,0 +1,49 @@
+1. 平台： ALENTEK 开发板源码，
+2. printk("%s %s %d \n",__FILE__,__FUNCTION__,__LINE__);
+
+3. 系统启动后打印出的启动参数为: Kernel command line: console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw
+4. 执行/etc/rc.d/rc脚本
+   在不同的运行级别下，/etc/rc.d/rc这个脚本会分别执行不同目录下的脚本，rc.sysinit通过分析/etc/inittab文件来确定系统的启动级别，然后才去执行。
+
+	Run level 0 – /etc/rc.d/rc0.d/
+	Run level 1 – /etc/rc.d/rc1.d/
+	Run level 2 – /etc/rc.d/rc2.d/
+	Run level 3 – /etc/rc.d/rc3.d/
+	Run level 4 – /etc/rc.d/rc4.d/
+	Run level 5 – /etc/rc.d/rc5.d/
+	Run level 6 – /etc/rc.d/rc6.d/
+    这些目录下的脚本只有K和S开头的文件，K开头的文件为开机需要执行关闭的服务，
+	S开头的文件为开机需要执行开启的服务。如果要对某个运行级别中的服务进行更具体的定制，
+	通过chkconfig命令来操作。这些shell脚本的启动或结束顺序是由S或K字母后面的数字决定，
+	数字越小的脚本越先执行。例如，/etc/rc.d/rc3.d /S01sysstat就比/etc/rc.d/rc3.d /S99local先执行
+5. Shell 打印文件名和行号： echo "$0, L$LINENO"
+
+参考：https://www.cnblogs.com/anay/p/9028765.html
+      https://blog.csdn.net/wangwenwen/article/details/6635692
+
+
+
+
+
+起点：init/main.c中的kernel_init
+    由于启动参数中不包含/init和中使用init=xxxx 因此：
+	1. if (ramdisk_execute_command)不成立，
+	2. if (execute_command) 不成立
+	因此执行：
+	if (!try_to_run_init_process("/sbin/init") ||
+	    !try_to_run_init_process("/etc/init") ||
+	    !try_to_run_init_process("/bin/init") ||
+	    !try_to_run_init_process("/bin/sh"))
+		return 0;
+    在文件系统中存在/sbin/init文件，此处将执行/sbin/init，/sbin/init是个二进制文件，
+	
+	并开始执行/etc/init.d/rcS文件,设置运行级别为S并执行/etc/init.d/rc文件
+
+	首先运行级别是S，执行/etc/rcS.d下的文件
+		开始执行/etc/rcS.d/ 下的对用脚本   
+		1. S00psplash.sh
+		   1. mount tmpfs -t tmpfs $TMPDIR -o,size=40k   =================怎么理解
+		   2. /usr/bin/psplash --angle $rotation &      $rotation代表log的方向,
+    将运行级别改成5，并再次运行/etc/init.d/rc文件,并执rc5.d中相应的文件 ========在哪切换运行级别的?
+    	   
+	    

@@ -1,0 +1,17 @@
+先读取目标到DRAM(TFTP/NFS都可以)，在写入对应区域
+
+1. 更新uboot
+
+mmc dev 1:0
+tftp 80800000 u-boot.imx
+mmc write 80800000 2 346    # 346 = u-boot.imx文件大小除以512 得到的16进制mm 
+mmc partconf 1 1 0 0
+reset
+
+2.更新zImage
+tftp 80800000 zImage
+fatwrite mmc 1:1 80800000 zImage 0x6796E8  # 0x6796E8 是zImage  文件的大小
+
+3.      
+nfs 80800000 192.168.11.119:/home/owen/nfs/imx6ull-14x14-emmc-4.3-800x480-c.dtb
+fatwrite mmc 1:1 83000000 imx6ull-14x14-emmc-4.3-800x480-c.dtb  0x97A7   # 0x97A7 是zImage  文件的大小

@@ -1,0 +1,7 @@
+
+
+
+
+
+
+命令行执行启动gdbserver命令，例如:gdbserver localhost:1234 /home/a123/UART/usart /dev/ttyS0

@@ -1,0 +1,78 @@
+1.先将bmp 图片放在EMMC：/run/media/mmcblk1p1/
+2.进入uboot 命令行模式
+  1. 加载图片到DRAM: fatload mmc 1:1 80800000 logo/400-200/alientek.bmp
+  2. 显示图片：bmp display 80800000
+
+
+///======================================================================
+
+
+printf("%s:%s:%i: here i am\n", __FILE__, __func__, __LINE__);
+
+
+1. logo相关的调用流程
+|-->board_init_r: < board.c>
+
+    |--> stdio_add_devices：<common/stdio.c>
+
+	   |--> drv_video_init:   <driver/video/cfb_console.c>
+	   
+	       |--> board_video_skip:   <arch/arm/imx-common/video.c>
+		   
+	       |--> video_init:   <drivers/video/cfb_console.c>
+		   
+	           |--> video_hw_init:   <Video: drivers/video/mxsfb.c>
+		
+               |--> video_display_bitmap:   <drivers/video/cfb_console.c>
+			   
+               |--> video_logo    <drivers/video/cfb_console.c>
+
+
+2.根据相应的设置LCD 硬件相关的参数：(IO等)
+3.设置屏幕相关的参数:struct display_info_t const displays[]  <board/freescale/mx6ull_alientek_emmc/mx6ull_alientek_emmc.c >
+4.检查环境变量里的panel 是否和 struct display_info_t const displays[]里的.name 字段相同
+5.选择相应的图片，resize到相应大小(Paint--resize)  图片的选择上有点讲究，这里暂时不清楚，
+
+5.TFTP方式更新uboot
+mmc dev 1:0
+tftp 80800000 u-boot.imx
+mmc write 80800000 2 346    # 346 = u-boot.imx文件大小除以512 得到的16进制mm 
+mmc partconf 1 1 0 0
+reset
+
+mmc dev 1:0
+tftp 80800000 u-boot.imx
+mmc write 80800000 2 34E
+mmc partconf 1 1 0 0
+reset
+
+
+
+针对正点原子出厂自带的uboot 显示log:
+方法一
+1.先将bmp 图片放在EMMC：/run/media/mmcblk1p1/
+2.进入uboot 命令行模式设置参数logo_file 为对应的bmp图片路径，保存退出，重启ubooot
+    setenv logo_file  alientek1.bmp
+    saveenv
+	reset
+方法二
+1. include/configs/mx6ullevk.h 文件中使能 #define CONFIG_VIDEO_LOGO,此时会显示正点原子的logo
+2. 修改log: 将制作好的logo 放在源码目录tool/logos 文件夹下,并修改 tool 目录下的Makefile，需要make clean 在make
+	# Generic logo
+	ifeq ($(LOGO_BMP),)
+	LOGO_BMP= $(srctree)/$(src)/logos/denx.bmp
+
+	# Use board logo and fallback to vendor
+	ifneq ($(wildcard $(srctree)/$(src)/logos/$(BOARD).bmp),)
+	LOGO_BMP= $(srctree)/$(src)/logos/$(BOARD).bmp
+	else
+	ifneq ($(wildcard $(srctree)/$(src)/logos/$(VENDOR).bmp),)
+	LOGO_BMP= $(srctree)/$(src)/logos/$(VENDOR).bmp
+	#LOGO_BMP= $(srctree)/$(src)/logos/alientek.bmp
+	endif
+	endif
+	LOGO_BMP= $(srctree)/$(src)/logos/atmel.bmp      ##############增加这一行并将bmp文件名改成自己的bmp图片
+	endif # !LOGO_BMP
+	
+
+警告：不合适的图片可能导致uboot出问题，目前发现网络不通

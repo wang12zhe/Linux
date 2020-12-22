@@ -1,0 +1,9 @@
+参考 【正点原子】I.MX6U 开发板文件拷贝及固件更新参考手册V1.2
+
+在更新uboot后需要加上mmc bootpart enable 1 1 /dev/mmcblk1命令，否则更新无效
+
+更新Uboot的命令可以写在脚本里
+echo 0 > /sys/block/mmcblk1boot0/force_ro
+dd if=u-boot.imx of=/dev/mmcblk1boot0 bs=1024 seek=1 conv=fsync
+echo 1 >/sys/block/mmcblk1boot0/force_ro
+mmc bootpart enable 1 1 /dev/mmcblk1
