@@ -15,3 +15,18 @@ fatwrite mmc 1:1 80800000 zImage 0x6796E8  # 0x6796E8 是zImage  文件的大小
 3.      
 nfs 80800000 192.168.11.119:/home/owen/nfs/imx6ull-14x14-emmc-4.3-800x480-c.dtb
 fatwrite mmc 1:1 83000000 imx6ull-14x14-emmc-4.3-800x480-c.dtb  0x97A7   # 0x97A7 是zImage  文件的大小
+
+
+
+自动加载网络上的uboot/zImage/dtb
+在uboot里设置环境变量：
+NetworkImage
+
+
+
+tftp 87800000 uboot.imx
+tftp 80800000 zImage
+tftp 83800000 imx6ull-alientek-emmc.dtb
+
+nfs 87800000 192.158.1.245:/home/owen/nfs/RAE/uboot/u-boot.imx;go 0x87800000;
+
