@@ -1,0 +1,28 @@
+1. 网络文件系统启动
+setenv mmcboot 'echo Booting from mmc ...; run bootargs; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run loadfdt; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
+setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.109:/home/owen/nfs/RAE/rootfs,proto=tcp rw ip=192.168.11.57:192.168.11.109:192.168.11.1:255.255.255.0::eth0:off'
+
+2.mmc里的文件系统 启动
+setenv mmcboot 'echo Booting from mmc ...; run mmcargs; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run loadfdt; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
+
+
+3.通过下载网上的Uboot  Ziamge  dtb，挂在网络文件系统启动
+从网络下载uboot,zimage,dtb:
+原理
+启动，进入uboot模式，TFTP下载uboot.bin 至0x87800000，然后go 0x87800000开始运行uboot.bin,uboot.bin中bootcmd设置NFS下载zImage至0x80800000，NFS下载设备树dtb至0x83000000，用命令bootz 80800000 - 83000000启动kernel，bootargs设置在kernel启动过程中用NFS挂载网络文件系统
+上述原理中的传输协议为TFTP,改成NFS也行
+
+step 1 
+setenv ethaddr 00:04:9f:04:d2:35
+setenv ipaddr 192.168.11.57
+setenv gatewayip 192.168.11.1
+setenv netmask 255.255.255.0
+setenv serverip 192.168.11.119
+
+修改环境变量
+
+setenv myboot "nfs 87800000 192.168.11.109:/home/owen/nfs/RAE/uboot/u-boot.imx;go 87800000"
+setenv bootcmd "nfs 80800000 192.168.11.109:/home/owen/nfs/RAE/linux/arch/arm/boot/zImage;nfs 83800000 192.168.11.109:/home/owen/nfs/RAE/linux/arch/arm/boot/dts/imx6ull-alientek-emmc.dtb;bootz 80800000 - 83000000"
+saveenv
+
+在uboot模式下执行run 
