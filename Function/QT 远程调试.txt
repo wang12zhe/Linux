@@ -1,0 +1,39 @@
+参考【正点原子】I.MX6U 出厂系统Qt交叉编译环境搭建V1.3
+
+Custom Process Step 设置：
+  ssh
+  -p %{Device:SshPort} %{Device:UserName}@%{Device:HostAddress} 'mkdir -p %{CurrentRun:Executable:Path}'
+  %{buildDir}
+ 
+  scp
+  -P %{Device:SshPort} %{CurrentRun:Executable:FileName} %{Device:UserName}@%{Device:HostAddress}:%{CurrentRun:Executable:FilePath}
+  %{buildDir}
+
+   其实上边就是通过ssh 创建目录并通过SCP 拷贝文件到目录
+
+
+
+
+
+   用ATK的文件系统上述设置已经OK
+
+   用RAE的文件系统会报错:ssh_askpass no such file or directory
+   需要安装
+   sudo apt-get autoremove openssh-client
+   sudo apt-get install openssh-client openssh-sftp-server openssh-server ssh
+   sudo apt-get install ssh-askpass
+   
+
+文档介绍的只能运行程序，无法单步调试，单步调试需要配置对应的debuggers
+
+
+
+//////////=============================================================
+经测试: 上述方法有问题，
+
+后发现RAE的文件系统根本不需要设置Custom Process Step,而是使用默认的Upload files via SFTP,
+怀疑跟上边安装的软件有关
+
+
+
+//===================================================================
