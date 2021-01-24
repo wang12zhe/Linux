@@ -1,0 +1,80 @@
+参考
+1. 正点原子开发指南37.4.1 CPU频率修改章节内容
+2. 如何修改开发板主频--迅为iMX6UL开发板
+   https://blog.csdn.net/weixin_30681615/article/details/97331717?utm_medium=distribute.pc_relevant.none-task-blog-searchFromBaidu-2.not_use_machine_learn_pai&depth_1-utm_source=distribute.pc_relevant.none-task-blog-searchFromBaidu-2.not_use_machine_learn_pai
+3. https://blog.csdn.net/xzx208/article/details/80226394
+
+CPU 频率相关信息保存在/sys/devices/system/cpu/cpu0/cpufreq 路径
+1. 查看CPU工作频率:
+    cat cpuinfo_cur_freq
+2.查看使用的调频策略:
+    cat scaling_governor
+3.修改调频策略：
+   1. 参考正点原子的启动开发指南37.4.1 CPU频率修改章节内容
+   2. echo userspace >scaling_governor	
+4. 在调频策略为userspace 的时候可以修改运行频率
+   echo 396000 > scaling_setspeed    
+
+5.查看各个模块和总线的频率(待确认):
+cat /sys/kernel/debug/clk/clk_summary
+	
+
+
+6. 关于设备数的CPU频率：
+设备树operating-points
+
+CPU可工作的频率由设备树的operating-points决定，目前的设备树
+
+operating-points = <
+	/* kHz	uV */
+	996000	1275000
+	792000	1225000
+	528000	1175000
+	396000	1025000
+	198000	950000
+>;
+
+从设备树来看，没有做限制（当然也可以自己修改来限制最高运行频率，不过应该没人这么干）
+既然设备树里没有限制，那就应该是代码中识别了CPU的型号，取消了其中某些选项
+
+查找代码
+
+最终定位到mach-imx6ull.c文件
+
+static void __init imx6ul_opp_check_speed_grading(struct device *cpu_dev)
+{
+     ……
+	/*
+	 * Speed GRADING[1:0] defines the max speed of ARM:
+	 * 2b'00: Reserved;
+	 * 2b'01: 528000000Hz;
+	 * 2b'10: 700000000Hz(i.MX6UL), 800000000Hz(i.MX6ULL);
+	 * 2b'11: Reserved(i.MX6UL), 1GHz(i.MX6ULL);
+	 * We need to set the max speed of ARM according to fuse map.
+	 */
+	val = readl_relaxed(base + OCOTP_CFG3);
+	val >>= OCOTP_CFG3_SPEED_SHIFT;
+	val &= 0x3;
+	if (cpu_is_imx6ul()) {
+		if (val < OCOTP_CFG3_SPEED_696MHZ) {
+			if (dev_pm_opp_disable(cpu_dev, 696000000))
+				pr_warn("Failed to disable 696MHz OPP\n");
+		}
+	}
+
+	if (cpu_is_imx6ull()) {
+		if (val != OCOTP_CFG3_SPEED_1_GHZ) { //将这几行屏蔽可超频到996Mhz
+			if (dev_pm_opp_disable(cpu_dev, 996000000))
+				pr_warn("Failed to disable 996MHz OPP\n");
+		}
+		if (val != OCOTP_CFG3_SPEED_696MHZ) { //将这几行屏蔽可超频到792Mhz
+			if (dev_pm_opp_disable(cpu_dev, 792000000))
+				pr_warn("Failed to disable 792MHz OPP\n");
+		}
+	}
+	iounmap(base);
+
+put_node:
+	of_node_put(np);
+}
+通过分析代码可知，读取OCOTP_CFG3寄存器来判断是否要屏蔽掉某些工作频率，
