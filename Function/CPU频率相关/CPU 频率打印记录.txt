@@ -1,0 +1,476 @@
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.1.15-g6989cdb2-dirty (owen@owen-Latitude-E5470) (gcc version 4.9.4 (Linaro GCC 4.9-2017.01) ) #57 SMP PREEMPT Wed Jan 27 16:21:58 CST 2021
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] Machine model: Freescale i.MX6 ULL 14x14 EVK Board
+[    0.000000] Reserved memory: created CMA memory pool at 0x98000000, size 128 MiB
+[    0.000000] Reserved memory: initialized node linux,cma, compatible id shared-dma-pool
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] PERCPU: Embedded 12 pages/cpu @97b90000 s16832 r8192 d24128 u49152
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 130048
+[    0.000000] Kernel command line: console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.58:/home/zhangyang/imx6ull/helix/rootfs,proto=tcp rw ip=192.168.11.57:192.168.11.58:192.168.11.1:255.255.255.0::eth0:off
+[    0.000000] PID hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.000000] Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+[    0.000000] Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+[    0.000000] Memory: 375280K/524288K available (8535K kernel code, 454K rwdata, 2964K rodata, 528K init, 452K bss, 17936K reserved, 131072K cma-reserved, 0K highmem)
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xffc00000 - 0xfff00000   (3072 kB)
+[    0.000000]     vmalloc : 0xa0800000 - 0xff000000   (1512 MB)
+[    0.000000]     lowmem  : 0x80000000 - 0xa0000000   ( 512 MB)
+[    0.000000]     pkmap   : 0x7fe00000 - 0x80000000   (   2 MB)
+[    0.000000]     modules : 0x7f000000 - 0x7fe00000   (  14 MB)
+[    0.000000]       .text : 0x80008000 - 0x80b431ac   (11501 kB)
+[    0.000000]       .init : 0x80b44000 - 0x80bc8000   ( 528 kB)
+[    0.000000]       .data : 0x80bc8000 - 0x80c39960   ( 455 kB)
+[    0.000000]        .bss : 0x80c3c000 - 0x80cad160   ( 453 kB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] Preemptible hierarchical RCU implementation.
+[    0.000000]  Additional per-CPU info printed with stalls.
+[    0.000000]  RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=1.
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[    0.000000] NR_IRQS:16 nr_irqs:16 16
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 722534400
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 722534400  min_rate =0 max_rate =-1  top->rate =36864000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 722534400  min_rate =0 max_rate =-1  top->rate =36864000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 722534400  min_rate =0 max_rate =-1  top->rate =36864000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 722534400  min_rate =0 max_rate =-1  top->rate =36864000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 722534400  min_rate =0 max_rate =-1  top->rate =36864000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 722534400  min_rate =0 max_rate =-1  top->rate =36864000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1676  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 722534400  min_rate =0 max_rate =-1  top->rate =147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 722534400
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 147456000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 722534400
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 50000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 50000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 24000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 24000000  min_rate =0 max_rate =-1  top->rate =12000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 24000000  min_rate =0 max_rate =-1  top->rate =12000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 24000000  min_rate =0 max_rate =-1  top->rate =12000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 24000000  min_rate =0 max_rate =-1  top->rate =12000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 24000000  min_rate =0 max_rate =-1  top->rate =12000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 24000000  min_rate =0 max_rate =-1  top->rate =12000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 24000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 12000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 24000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 320000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 320000000  min_rate =0 max_rate =-1  top->rate =508235294
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 320000000  min_rate =0 max_rate =-1  top->rate =508235294
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 320000000  min_rate =0 max_rate =-1  top->rate =508235294
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 320000000  min_rate =0 max_rate =-1  top->rate =508235294
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 320000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 508235294
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 320000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 99000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 99000000  min_rate =0 max_rate =-1  top->rate =132000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 99000000  min_rate =0 max_rate =-1  top->rate =132000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 99000000  min_rate =0 max_rate =-1  top->rate =132000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 99000000  min_rate =0 max_rate =-1  top->rate =132000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 99000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 132000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 99000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 132000000
+[    0.000000] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 722534400
+[    0.000000] mxc_clocksource_init 3000000
+[    0.000000] Switching to timer-based delay loop, resolution 333ns
+[    0.000015] sched_clock: 32 bits at 3000kHz, resolution 333ns, wraps every 715827882841ns
+[    0.000060] clocksource mxc_timer1: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 637086815595 ns
+[    0.002852] Console: colour dummy device 80x30
+[    0.002892] Calibrating delay loop (skipped), value calculated using timer frequency.. 6.00 BogoMIPS (lpj=30000)
+[    0.002929] pid_max: default: 32768 minimum: 301
+[    0.003162] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.003194] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.004563] CPU: Testing write buffer coherency: ok
+[    0.005063] /cpus/cpu@0 missing clock-frequency property
+[    0.005108] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.005219] Setting up static identity map for 0x80008280 - 0x800082d8
+[    0.041226] Brought up 1 CPUs
+[    0.041264] SMP: Total of 1 processors activated (6.00 BogoMIPS).
+[    0.041285] CPU: All CPU(s) started in SVC mode.
+[    0.042392] devtmpfs: initialized
+[    0.060059] device-tree: Duplicate name in lcdif@021c8000, renamed to "display#1"
+[    0.066743] VFP support v0.3: implementor 41 architecture 2 part 30 variant 7 rev 5
+[    0.067631] clocksource jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.077584] pinctrl core: initialized pinctrl subsystem
+[    0.080268] NET: Registered protocol family 16
+[    0.099440] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[    0.130993] cpuidle: using governor ladder
+[    0.161059] cpuidle: using governor menu
+[    0.211925] hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+[    0.211960] hw-breakpoint: maximum watchpoint size is 8 bytes.
+[    0.216533] imx6ul-pinctrl 20e0000.iomuxc: initialized IMX pinctrl driver
+[    0.217355] imx6ul-pinctrl 2290000.iomuxc-snvs: initialized IMX pinctrl driver
+[    0.289016] mxs-dma 1804000.dma-apbh: initialized
+[    0.296335] SCSI subsystem initialized
+[    0.297705] usbcore: registered new interface driver usbfs
+[    0.297895] usbcore: registered new interface driver hub
+[    0.298115] usbcore: registered new device driver usb
+[    0.301152] i2c i2c-0: IMX I2C adapter registered
+[    0.301200] i2c i2c-0: can't use DMA
+[    0.303552] i2c i2c-1: IMX I2C adapter registered
+[    0.303600] i2c i2c-1: can't use DMA
+[    0.303930] Linux video capture interface: v2.00
+[    0.304139] pps_core: LinuxPPS API ver. 1 registered
+[    0.304163] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.304245] PTP clock support registered
+[    0.307354] MIPI CSI2 driver module loaded
+[    0.308051] Advanced Linux Sound Architecture Driver Initialized.
+[    0.310352] Bluetooth: Core ver 2.20
+[    0.310482] NET: Registered protocol family 31
+[    0.310504] Bluetooth: HCI device and connection manager initialized
+[    0.310546] Bluetooth: HCI socket layer initialized
+[    0.310584] Bluetooth: L2CAP socket layer initialized
+[    0.310670] Bluetooth: SCO socket layer initialized
+[    0.313363] Switched to clocksource mxc_timer1
+[    0.340720] NET: Registered protocol family 2
+[    0.342339] TCP established hash table entries: 4096 (order: 2, 16384 bytes)
+[    0.342482] TCP bind hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.342643] TCP: Hash tables configured (established 4096 bind 4096)
+[    0.342778] UDP hash table entries: 256 (order: 1, 8192 bytes)
+[    0.342841] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
+[    0.343271] NET: Registered protocol family 1
+[    0.344152] RPC: Registered named UNIX socket transport module.
+[    0.344188] RPC: Registered udp transport module.
+[    0.344207] RPC: Registered tcp transport module.
+[    0.344227] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.347757] imx rpmsg driver is registered.
+[    0.350667] Bus freq driver module loaded
+[    0.352861] futex hash table entries: 256 (order: 2, 16384 bytes)
+[    0.370307] VFS: Disk quotas dquot_6.6.0
+[    0.370822] VFS: Dquot-cache hash table entries: 1024 (order 0, 4096 bytes)
+[    0.376843] NFS: Registering the id_resolver key type
+[    0.376963] Key type id_resolver registered
+[    0.376985] Key type id_legacy registered
+[    0.377204] jffs2: version 2.2. (NAND) © 2001-2006 Red Hat, Inc.
+[    0.379150] fuse init (API version 7.23)
+[    0.390693] io scheduler noop registered
+[    0.390744] io scheduler deadline registered
+[    0.391257] io scheduler cfq registered (default)
+[    0.392426] imx-weim 21b8000.weim: Driver registered.
+[    0.399345] backlight supply power not found, using dummy regulator
+[    0.401908] MIPI DSI driver module loaded
+[    0.402441] MIPI DSI driver module loaded
+[    0.408818] 21c8000.lcdif supply lcd not found, using dummy regulator
+[    0.517829] mxsfb 21c8000.lcdif: failed to find mxc display driver
+[    0.517912] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 35500000
+[    0.517952] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 35500000  min_rate =0 max_rate =-1  top->rate =96368733
+[    0.517984] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 35500000  min_rate =0 max_rate =-1  top->rate =96368733
+[    0.518083] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 35500000  min_rate =0 max_rate =-1  top->rate =96368733
+[    0.518112] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 35500000  min_rate =0 max_rate =-1  top->rate =96368733
+[    0.518144] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 134916226  min_rate =0 max_rate =-1  top->rate =674581128
+[    0.518182] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 134916226  min_rate =0 max_rate =-1  top->rate =674581128
+[    0.518211] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 134916226  min_rate =0 max_rate =-1  top->rate =674581128
+[    0.518245] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 134916226  min_rate =0 max_rate =-1  top->rate =674581128
+[    0.518275] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 35500000  min_rate =0 max_rate =-1  top->rate =674581128
+[    0.518303] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 35500000  min_rate =0 max_rate =-1  top->rate =674581128
+[    0.518327] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 35500000
+[    0.518353] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 674581128
+[    0.518390] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 35500000
+[    0.520018] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 35500000
+[    0.520040] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 35500000  min_rate =0 max_rate =-1  top->rate =33729057
+[    0.520057] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 35500000  min_rate =0 max_rate =-1  top->rate =33729057
+[    0.520141] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 35500000  min_rate =0 max_rate =-1  top->rate =33729057
+[    0.520158] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 35500000  min_rate =0 max_rate =-1  top->rate =33729057
+[    0.520176] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 35500000  min_rate =0 max_rate =-1  top->rate =33729057
+[    0.520193] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 35500000  min_rate =0 max_rate =-1  top->rate =33729057
+[    0.520205] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 35500000
+[    0.520217] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 33729057
+[    0.520239] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 35500000
+[    0.528962] Console: switching to colour frame buffer device 100x30
+[    0.543650] mxsfb 21c8000.lcdif: initialized
+[    0.545843] imx-sdma 20ec000.sdma: no event needs to be remapped
+[    0.546069] imx-sdma 20ec000.sdma: loaded firmware 3.3
+[    0.553502] imx-sdma 20ec000.sdma: initialized
+[    0.555885] 2020000.serial: ttymxc0 at MMIO 0x2020000 (irq = 19, base_baud = 5000000) is a IMX
+[    2.137269] console [ttymxc0] enabled
+[    2.142941] 21ec000.serial: ttymxc2 at MMIO 0x21ec000 (irq = 233, base_baud = 5000000) is a IMX
+[    2.241369] imx-rng 2284000.rngb: iMX RNG Registered.
+[    2.247249] imx sema4 driver is registered.
+[    2.251627] [drm] Initialized drm 1.1.0 20060810
+[    2.257693] [drm] Initialized vivante 1.0.0 20120216 on minor 0
+[    2.289735] brd: module loaded
+[    2.306131] loop: module loaded
+[    2.314832] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 66000000
+[    2.323162] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 66000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    2.336162] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 66000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    2.349211] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 66000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    2.362169] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 66000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    2.375117] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 66000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    2.388056] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 66000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    2.400989] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 66000000
+[    2.410362] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 198000000
+[    2.420261] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 66000000
+[    2.430379] fsl-quadspi 21e0000.qspi: unrecognized JEDEC id bytes: ff, ff, ff
+[    2.437611] fsl-quadspi 21e0000.qspi: Freescale QuadSPI probe failed
+[    2.450251] spi_imx 2010000.ecspi: probed
+[    2.457259] CAN device driver interface
+[    2.464386] flexcan 2090000.can: device registered (reg_base=a0a00000, irq=26)
+[    2.474110] 20b4000.ethernet supply phy not found, using dummy regulator
+[    2.684570] pps pps0: new PPS source ptp0
+[    2.691106] libphy: fec_enet_mii_bus: probed
+[    2.699707] fec 20b4000.ethernet eth0: registered PHC device 0
+[    2.707524] 2188000.ethernet supply phy not found, using dummy regulator
+[    2.924461] pps pps1: new PPS source ptp1
+[    2.932166] fec 2188000.ethernet eth1: registered PHC device 1
+[    2.939921] PPP generic driver version 2.4.2
+[    2.944969] PPP BSD Compression module registered
+[    2.949733] PPP Deflate Compression module registered
+[    2.954943] PPP MPPE Compression module registered
+[    2.959794] NET: Registered protocol family 24
+[    2.964591] usbcore: registered new interface driver asix
+[    2.970216] usbcore: registered new interface driver ax88179_178a
+[    2.976576] usbcore: registered new interface driver cdc_ether
+[    2.982576] usbcore: registered new interface driver net1080
+[    2.988468] usbcore: registered new interface driver cdc_subset
+[    2.994605] usbcore: registered new interface driver zaurus
+[    3.000461] usbcore: registered new interface driver cdc_ncm
+[    3.006229] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    3.012799] ehci-mxc: Freescale On-Chip EHCI Host driver
+[    3.018673] usbcore: registered new interface driver usb-storage
+[    3.024982] usbcore: registered new interface driver usb_ehset_test
+[    3.034201] 2184800.usbmisc supply vbus-wakeup not found, using dummy regulator
+[    3.043648] 2184000.usb supply vbus not found, using dummy regulator
+[    3.055829] ci_hdrc ci_hdrc.0: EHCI Host Controller
+[    3.060794] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 1
+[    3.083511] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
+[    3.091221] hub 1-0:1.0: USB hub found
+[    3.095269] hub 1-0:1.0: 1 port detected
+[    3.101169] 2184200.usb supply vbus not found, using dummy regulator
+[    3.111645] ci_hdrc ci_hdrc.1: EHCI Host Controller
+[    3.116781] ci_hdrc ci_hdrc.1: new USB bus registered, assigned bus number 2
+[    3.143552] ci_hdrc ci_hdrc.1: USB 2.0 started, EHCI 1.00
+[    3.151252] hub 2-0:1.0: USB hub found
+[    3.155330] hub 2-0:1.0: 1 port detected
+[    3.162048] mousedev: PS/2 mouse device common for all mice
+[    3.169839] input: 20cc000.snvs:snvs-powerkey as /devices/platform/soc/2000000.aips-bus/20cc000.snvs/20cc000.snvs:snvs-powerkey/input/input0
+[    3.473446] usb 2-1: new high-speed USB device number 2 using ci_hdrc
+[    3.513687] edt_ft5x06 1-0038: touchscreen probe failed
+[    3.519046] edt_ft5x06: probe of 1-0038 failed with error -5
+[    3.525257] <<-GTP-INFO->> GTP driver installing...
+[    3.530841] <<-GTP-INFO->> GTP Driver Version: V2.4<2014/11/28>
+[    3.537202] <<-GTP-INFO->> GTP I2C Address: 0x5d
+[    3.541910] 1-005d supply vdd_ana not found, using dummy regulator
+[    3.548398] 1-005d supply vcc_i2c not found, using dummy regulator
+[    3.554810] <<-GTP-INFO->> Guitar reset
+[    3.627322] hub 2-1:1.0: USB hub found
+[    3.631661] hub 2-1:1.0: 4 ports detected
+[    3.685617] <<-GTP-INFO->> IC Version: 9147_1040
+[    3.721702] <<-GTP-INFO->> X_MAX: 800, Y_MAX: 480, TRIGGER: 0x03
+[    3.743444] <<-GTP-INFO->> create proc entry gt9xx_config success
+[    3.750261] input: goodix-ts as /devices/virtual/input/input2
+[    3.757107] <<-GTP-INFO->> GTP works in interrupt mode.
+[    3.767059] snvs_rtc 20cc000.snvs:snvs-rtc-lp: rtc core: registered 20cc000.snvs:snvs-r as rtc0
+[    3.776480] i2c /dev entries driver
+[    3.784724] IR NEC protocol handler initialized
+[    3.789360] IR RC5(x/sz) protocol handler initialized
+[    3.794556] IR RC6 protocol handler initialized
+[    3.799173] IR JVC protocol handler initialized
+[    3.803826] IR Sony protocol handler initialized
+[    3.808525] IR SANYO protocol handler initialized
+[    3.813502] IR Sharp protocol handler initialized
+[    3.818293] IR MCE Keyboard/mouse protocol handler initialized
+[    3.824252] IR XMP protocol handler initialized
+[    3.835565] pxp-v4l2 pxp_v4l2: initialized
+[    3.843287] 0-000e supply vdd not found, using dummy regulator
+[    3.849551] 0-000e supply vddio not found, using dummy regulator
+[    3.856298] mag3110 0-000e: check mag3110 chip ID
+[    3.861436] mag3110 0-000e: read chip ID 0xfffffffb is not equal to 0xc4!
+[    3.868707] mag3110: probe of 0-000e failed with error -22
+[    3.877102] imx2-wdt 20bc000.wdog: use WDOG_B to reboot.
+[    3.883554] imx2-wdt 20bc000.wdog: timeout 60 sec (nowayout=0)
+[    3.889858] Bluetooth: HCI UART driver ver 2.3
+[    3.894544] Bluetooth: HCI UART protocol H4 registered
+[    3.899716] Bluetooth: HCI UART protocol BCSP registered
+[    3.905108] Bluetooth: HCI UART protocol ATH3K registered
+[    3.910784] usbcore: registered new interface driver bcm203x
+[    3.916585] usb 2-1.1: new high-speed USB device number 3 using ci_hdrc
+[    3.923752] usbcore: registered new interface driver btusb
+[    3.929484] usbcore: registered new interface driver ath3k
+[    3.936394] sdhci: Secure Digital Host Controller Interface driver
+[    3.942698] sdhci: Copyright(c) Pierre Ossman
+[    3.947254] sdhci-pltfm: SDHCI platform and OF driver helper
+[    3.955583] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 132000000
+[    3.964100] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    3.977178] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    3.990231] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.003271] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.016425] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.029613] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.042692] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 132000000
+[    4.052245] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 198000000
+[    4.062238] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 132000000
+[    4.073278] /soc/aips-bus@02100000/usdhc@02190000: voltage-ranges unspecified
+[    4.080731] sdhci-esdhc-imx 2190000.usdhc: Got CD GPIO
+[    4.090338] sdhci-esdhc-imx 2190000.usdhc: No vqmmc regulator found
+[    4.144942] mmc0: SDHCI controller on 2190000.usdhc [2190000.usdhc] using ADMA
+[    4.160296] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 132000000
+[    4.171877] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.185039] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.200174] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.215325] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.230435] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.245569] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 132000000  min_rate =0 max_rate =-1  top->rate =198000000
+[    4.258694] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 132000000
+[    4.270279] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 198000000
+[    4.283295] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 132000000
+[    4.293774] /soc/aips-bus@02100000/usdhc@02194000: voltage-ranges unspecified
+[    4.301121] sdhci-esdhc-imx 2194000.usdhc: could not get ultra high speed state, work on normal mode
+[    4.311337] sdhci-esdhc-imx 2194000.usdhc: No vmmc regulator found
+[    4.317761] sdhci-esdhc-imx 2194000.usdhc: No vqmmc regulator found
+[    4.363479] mmc1: SDHCI controller on 2194000.usdhc [2194000.usdhc] using ADMA
+[    4.384146] usbcore: registered new interface driver usbhid
+[    4.389763] usbhid: USB HID core driver
+[    4.408824] fsl-asrc 2034000.asrc: driver registered
+[    4.415609] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 11289600
+[    4.424166] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1704  rate = 11289600  min_rate =0 max_rate =-1  top->rate =90316800
+[    4.437187] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 11289600  min_rate =0 max_rate =-1  top->rate =90316800
+[    4.450336] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 11289600  min_rate =0 max_rate =-1  top->rate =90316800
+[    4.463326] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 11289600  min_rate =0 max_rate =-1  top->rate =90316800
+[    4.476352] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 11289600  min_rate =0 max_rate =-1  top->rate =90316800
+[    4.489311] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 11289600  min_rate =0 max_rate =-1  top->rate =90316800
+[    4.502257] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 11289600
+[    4.511722] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 90316800
+[    4.521649] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 11289600
+[    4.538961] mmc0: host does not support reading read-only switch, assuming write-enable
+[    4.551361] imx-wm8960 sound: wm8960-hifi <-> 202c000.sai mapping ok
+[    4.560372] imx-wm8960 sound: snd-soc-dummy-dai <-> 2034000.asrc mapping ok
+[    4.571047] imx-wm8960 sound: wm8960-hifi <-> 202c000.sai mapping ok
+[    4.578656] mmc0: new high speed SDHC card at address aaaa
+[    4.585621] mmcblk0: mmc0:aaaa SC16G 14.8 GiB
+[    4.595933]  mmcblk0: p1 p2
+[    4.678349] mmc1: MAN_BKOPS_EN bit is not set
+[    4.701656] mmc1: new DDR MMC card at address 0001
+[    4.714992] NET: Registered protocol family 26
+[    4.721404] NET: Registered protocol family 10
+[    4.726379] mmcblk1: mmc1:0001 8GTF4R 7.28 GiB
+[    4.731323] mmcblk1boot0: mmc1:0001 8GTF4R partition 1 4.00 MiB
+[    4.737690] mmcblk1boot1: mmc1:0001 8GTF4R partition 2 4.00 MiB
+[    4.746507] sit: IPv6 over IPv4 tunneling driver
+[    4.752829] NET: Registered protocol family 17
+[    4.757877] mmcblk1rpmb: mmc1:0001 8GTF4R partition 3 512 KiB
+[    4.765252] bridge: automatic filtering via arp/ip/ip6tables has been deprecated. Update your scripts to load br_netfilter if you need this.
+[    4.780246] can: controller area network core (rev 20120528 abi 9)
+[    4.786743]  mmcblk1: p1 p2
+[    4.790275] NET: Registered protocol family 29
+[    4.800367] can: raw protocol (rev 20120528)
+[    4.804987] can: broadcast manager protocol (rev 20120528 t)
+[    4.810731] can: netlink gateway (rev 20130117) max_hops=1
+[    4.817082] Bluetooth: RFCOMM TTY layer initialized
+[    4.822036] Bluetooth: RFCOMM socket layer initialized
+[    4.827487] Bluetooth: RFCOMM ver 1.11
+[    4.831320] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[    4.836739] Bluetooth: BNEP filters: protocol multicast
+[    4.842020] Bluetooth: BNEP socket layer initialized
+[    4.847080] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+[    4.853043] Bluetooth: HIDP socket layer initialized
+[    4.858318] 8021q: 802.1Q VLAN Support v1.8
+[    4.862710] Key type dns_resolver registered
+[    4.868504] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:327
+   imx6q_cpufreq_probe======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:419  num =4
+[    4.890935] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:421  freq_table[0].frequency = 198000
+[    4.903867] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:421  freq_table[1].frequency = 396000
+[    4.916731] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:421  freq_table[2].frequency = 528000
+[    4.929633] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:421  freq_table[3].frequency = 594000
+[    4.942495] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:449  prop->length =40
+[    4.954008] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:453  num =4  nr=10 soc_opp_count =0
+[    4.966695] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =0, i = 0, freq =996000, volt = 1175000, freq_table[j].frequency =198000
+[    4.983206] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =0, i = 1, freq =594000, volt = 1175000, freq_table[j].frequency =198000
+[    4.999710] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =0, i = 2, freq =528000, volt = 1175000, freq_table[j].frequency =198000
+[    5.016215] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =0, i = 3, freq =396000, volt = 1175000, freq_table[j].frequency =198000
+[    5.032709] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =0, i = 4, freq =198000, volt = 1175000, freq_table[j].frequency =198000
+[    5.049282] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:461  j =0, i = 4, freq =198000, volt = 1175000, freq_table[j].frequency =198000
+[    5.065791] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =1, i = 0, freq =996000, volt = 1175000, freq_table[j].frequency =396000
+[    5.082288] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =1, i = 1, freq =594000, volt = 1175000, freq_table[j].frequency =396000
+[    5.098937] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =1, i = 2, freq =528000, volt = 1175000, freq_table[j].frequency =396000
+[    5.115462] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =1, i = 3, freq =396000, volt = 1175000, freq_table[j].frequency =396000
+[    5.131966] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:461  j =1, i = 3, freq =396000, volt = 1175000, freq_table[j].frequency =396000
+[    5.148469] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =2, i = 0, freq =996000, volt = 1175000, freq_table[j].frequency =528000
+[    5.165011] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =2, i = 1, freq =594000, volt = 1175000, freq_table[j].frequency =528000
+[    5.181519] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =2, i = 2, freq =528000, volt = 1175000, freq_table[j].frequency =528000
+[    5.198020] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:461  j =2, i = 2, freq =528000, volt = 1175000, freq_table[j].frequency =528000
+[    5.214533] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =3, i = 0, freq =996000, volt = 1175000, freq_table[j].frequency =594000
+[    5.231031] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:459  j =3, i = 1, freq =594000, volt = 1175000, freq_table[j].frequency =594000
+[    5.247528] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:461  j =3, i = 1, freq =594000, volt = 1175000, freq_table[j].frequency =594000
+[    5.264018] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:482
+[    5.274093] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:499  num = 4  imx6_soc_volt[0] =1175000 imx6_soc_volt[num - 1] =1175000
+[    5.290082] ======================File:drivers/base/power/opp.c Function:dev_pm_opp_find_freq_exact Line:286
+[    5.300240] ======================File:drivers/base/power/opp.c Function:dev_pm_opp_find_freq_exact Line:298  available 1   freq =198000000
+[    5.313085] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:518 min_volt =950000
+[    5.324550] ======================File:drivers/base/power/opp.c Function:dev_pm_opp_find_freq_exact Line:286
+[    5.334707] ======================File:drivers/base/power/opp.c Function:dev_pm_opp_find_freq_exact Line:298  available 1   freq =594000000
+[    5.347550] ======================File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_probe Line:522 max_volt =1225000
+[    5.359142] ======================File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_cpuinfo Line:28
+[    5.369878] ======================File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_cpuinfo Line:42 freq =198000  min_freq=198000,max_freq = 198000
+[    5.384738] ======================File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_cpuinfo Line:42 freq =396000  min_freq=198000,max_freq = 396000
+[    5.399593] ======================File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_cpuinfo Line:42 freq =528000  min_freq=198000,max_freq = 528000
+[    5.414439] ======================File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_cpuinfo Line:42 freq =594000  min_freq=198000,max_freq = 594000
+[    5.429291] ====================== File:drivers/cpufreq/freq_table.c Function:cpufreq_table_validate_and_show Line:298
+[    5.440138] ====================== File:drivers/cpufreq/cpufreq.c Function:cpufreq_generic_init Line:173
+[    5.449768] ========File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_init Line:245
+[    5.458623] =======File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_cpufreq_init Line:251   policy->cur =396000 freq_table[0].frequency =198000
+[    5.472236] =======File:drivers/cpufreq/cpufreq.c Function:__cpufreq_driver_target Line:1950   target_freq=594000 relation =1
+[    5.483729] =======File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_target Line:139  freq=198000 policy->min =198000  policy->max =594000 relation =1 target_freq =594000
+[    5.500495] =======File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_target Line:139  freq=396000 policy->min =198000  policy->max =594000 relation =1 target_freq =594000
+[    5.517254] =======File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_target Line:139  freq=528000 policy->min =198000  policy->max =594000 relation =1 target_freq =594000
+[    5.534028] =======File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_target Line:139  freq=594000 policy->min =198000  policy->max =594000 relation =1 target_freq =594000
+[    5.550784] =======File:drivers/cpufreq/freq_table.c Function:cpufreq_frequency_table_target Line:186  optimal.driver_data =3 i =3
+[    5.562606] ========File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_set_target Line:72  new_freq =594000 freq_hz =594000000  old_freq=396000
+[    5.575705] ========File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_set_target Line:110  new_freq =594000 freq_hz =594000000  old_freq=396000
+[    5.588896] ========File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_set_target Line:150  new_freq =594000 freq_hz =594000000  old_freq=396000
+[    5.602010] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 198000000
+[    5.610442] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 198000000  min_rate =0 max_rate =-1  top->rate =396000000
+[    5.623483] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 198000000  min_rate =0 max_rate =-1  top->rate =396000000
+[    5.636531] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 198000000  min_rate =0 max_rate =-1  top->rate =396000000
+[    5.649560] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 198000000  min_rate =0 max_rate =-1  top->rate =396000000
+[    5.662585] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 198000000
+[    5.672043] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 396000000
+[    5.681958] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 198000000
+[    5.692297] ========File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_set_target Line:167  new_freq =594000 freq_hz =594000000  old_freq=396000
+[    5.705600] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 594000000
+[    5.714182] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 594000000  min_rate =0 max_rate =-1  top->rate =792000000
+[    5.727357] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 594000000  min_rate =0 max_rate =-1  top->rate =792000000
+[    5.740551] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 594000000  min_rate =0 max_rate =-1  top->rate =792000000
+[    5.753732] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 594000000  min_rate =0 max_rate =-1  top->rate =792000000
+[    5.766884] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 594000000
+[    5.776613] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 792000000
+[    5.786678] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 594000000
+[    5.796967] ======File:drivers/clk/clk.c Function:clk_set_rate Line:1926  rate = 594000000
+[    5.805497] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1689  rate = 594000000  min_rate =0 max_rate =-1  top->rate =162000000
+[    5.818650] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1718  rate = 594000000  min_rate =0 max_rate =-1  top->rate =162000000
+[    5.831778] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1728  rate = 594000000  min_rate =0 max_rate =-1  top->rate =162000000
+[    5.844936] ======File:drivers/clk/clk.c Function:clk_calc_new_rates Line:1736  rate = 594000000  min_rate =0 max_rate =-1  top->rate =162000000
+[    5.858054] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1876  rate = 594000000
+[    5.867610] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1882  top->rate = 162000000
+[    5.877603] ======File:drivers/clk/clk.c Function:clk_core_set_rate_nolock Line:1895  clk->req_rat= 594000000
+[    5.887692] ========File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_set_target Line:198  new_freq =594000 freq_hz =594000000  old_freq=396000
+[    5.900818] ========File:drivers/cpufreq/imx6q-cpufreq.c Function:imx6q_set_target Line:221  new_freq  =594000 low_power_run_support=1   freq_table[0].frequenc=198000
+[    5.951300] dhd_module_init in
+[    5.957213] input: gpio_keys@0 as /devices/platform/gpio_keys@0/input/input3
+[    5.965612] snvs_rtc 20cc000.snvs:snvs-rtc-lp: setting system clock to 1970-01-01 00:02:26 UTC (146)
+[    6.214389] fec 20b4000.ethernet eth0: Freescale FEC PHY driver [SMSC LAN8710/LAN8720] (mii_bus:phy_addr=20b4000.ethernet:01, irq=-1)
+[    6.253609] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[   10.374124] fec 20b4000.ethernet eth0: Link is Up - 100Mbps/Full - flow control rx/tx
+[   10.393603] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+[   10.414029] IP-Config: Complete:
+[   10.417330]      device=eth0, hwaddr=00:04:9f:04:d2:35, ipaddr=192.168.11.57, mask=255.255.255.0, gw=192.168.11.1
+[   10.427960]      host=192.168.11.57, domain=, nis-domain=(none)
+[   10.434069]      bootserver=192.168.11.58, rootserver=192.168.11.58, rootpath=
+[   10.441407] gpio_dvfs: disabling
+[   10.444827] can-3v3: disabling
+[   10.448471] ALSA device list:
+[   10.451478]   #0: wm8960-audio
+[   11.152373] IPv6: eth0: IPv6 duplicate address fe80::204:9fff:fe04:d235 detected!

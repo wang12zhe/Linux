@@ -1,0 +1,25 @@
+参考: liunx下判断c语言是否挂载U盘 https://blog.csdn.net/feipo_zhm/article/details/90210438
+1. 判断U盘是否插入ls /sys/class/scsi_device/
+2. 得到U盘的名字:ls /sys/class/scsi_device/3:0:0:0/device/block
+
+
+脚本实现U盘自动挂载（linux平台）
+https://blog.csdn.net/u011784994/article/details/73878822?utm_medium=distribute.pc_relevant_download.none-task-blog-baidujs-2.nonecase&depth_1-utm_source=distribute.pc_relevant_download.none-task-blog-baidujs-2.nonecase
+
+自动挂载：
+
+
+  1、在/etc/udev/rules.d目录里面创建11-usb-mount.rules，
+      11-usb-mount.rules里面的内容如下：
+		ACTION!="add",GOTO="farsight"
+		KERNEL=="sd[a-z][0-9]",RUN+="/sbin/mount-usb.sh %k"
+		LABEL="farsight"
+
+ 2、  在/sbin/目录里创建mount-usb.sh脚本文件
+     mount-usb.sh的内容如下：
+
+		#!/bin/sh
+		mkdir -p /mnt/usb
+		/bin/mount -t vfat /dev/$1 /mnt/usb
+		sync
+重启下即可在linux上实现自动挂载，u盘自动挂载到/mnt/usb目录里

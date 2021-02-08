@@ -1,0 +1,23 @@
+RAE的文件系统启动后不会主动挂在mmc和SD卡
+查看设备节点:
+
+[root@Honeywell_Helix]:/mnt$:ls /dev/mmcblk*
+/dev/mmcblk0       /dev/mmcblk1       /dev/mmcblk1p1
+/dev/mmcblk0p1     /dev/mmcblk1boot0  /dev/mmcblk1p2
+/dev/mmcblk0p2     /dev/mmcblk1boot1  /dev/mmcblk1rpmb
+
+
+经测试发现:
+/dev/mmcblk1boot0 是mmc的Uboot分区,
+/dev/mmcblk1p1 是mmc的分区,存储dtb 和zImage
+/dev/mmcblk1p2 是mmc卡的分区，存储的文件系统
+
+/dev/mmcblk0p1 是SD卡的分区,存储dtb 和zImage
+/dev/mmcblk0p2 是SD卡的分区，存储的文件系统
+
+
+
+挂在对应的分区到指定的文件就能查看对应分区的内容例如
+mount /dev/mmcblk1p1 /mnt
+
+mount /dev/mmcblk1p2 /mnt/SD2

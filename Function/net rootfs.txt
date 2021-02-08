@@ -25,7 +25,7 @@ setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.119:/ho
 setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.119:/home/owen/nfs/rootfsTest/qt551,proto=tcp rw ip=192.168.11.57:192.168.11.119:192.168.11.1:255.255.255.0::eth0:off'
 
 
-setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.150:/home/owen/nfs/rootfs,proto=tcp rw ip=192.168.11.57:192.168.11.150:192.168.11.1:255.255.255.0::eth0:off'
+setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.109:/home/owen/nfs/RAE/rootfs,proto=tcp rw ip=192.168.11.57:192.168.11.109:192.168.11.1:255.255.255.0::eth0:off'
 
 
 
@@ -56,11 +56,7 @@ ping 192.168.11.119
 step2:
 setenv mmcboot 'echo Booting from mmc ...; run bootargs; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run loadfdt; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
 setp3
-
-
-setenv a123bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.1.246:/home/a123/nfs/RAE/rootfs/,proto=tcp rw ip=192.168.1.57:192.168.1.246:192.168.1.1:255.255.255.0::eth0:off'
-
-setenv bootargs  $a123bootargs   'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.1.246:/home/a123/nfs/RAE/rootfs/,proto=tcp rw ip=192.168.1.57:192.168.1.246:192.168.1.1:255.255.255.0::eth0:off'
+setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.150:/home/owen/nfs/RAE/rootfs,proto=tcp rw ip=192.168.11.57:192.168.11.150:192.168.11.1:255.255.255.0::eth0:off'
 
 
 经测试在Uboot里做如下设置后,Kernal里的MAC 不变，但两个网卡的MAC一样，导致经常断网：
@@ -70,17 +66,5 @@ setenv netmask 255.255.255.0
 setenv serverip 192.168.11.119
 saveenv
 ping 192.168.11.119
-
-
-setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.1.245:/home/owen/nfs/RAE/rootfs,proto=tcp rw ip=192.168.1.57:192.168.1.245:192.168.1.1:255.255.255.0::eth0:off'
-
-
-发现在Ubuntu16.04上上述设置后能正常挂载，但是在Ubuntu20.04上上述操作后依然挂载失败,其根本原因是：
-Ubuntu 18.04/20.04 nfs 默认为协议3和协议4，但是我的uboot 默认启动的是协议2的形式
-若想要求 nfs 支持协议2，就在/etc/default/nfs-kernel-server末尾加一句：
-RPCNFSDOPTS="--nfs-version 2,3,4 --debug --syslog"
-参考:Ubuntu18.04挂载nfs失败....
-    https://blog.csdn.net/qq_30951423/article/details/85890581?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
-
 
 

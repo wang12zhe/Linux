@@ -1,0 +1,13 @@
+1. ubuntu base编译的文件系统启动后无法使用SSH的解决办法：
+
+ssh-keygen -t rsa -f ssh_host_rsa_key -N "" 
+ssh-keygen -t dsa -f ssh_host_dsa_key -N "" 
+ssh-keygen -t ecdsa -f ssh_host_ecdsa_key -N "" 
+ssh-keygen -t ed25519 -f ssh_host_ed25519_key -N ""
+
+测试发现不需要执行上边的四句命令
+ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
+ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
+mkdir /var/empty
+启动ssh服务：
+/usr/sbin/sshd

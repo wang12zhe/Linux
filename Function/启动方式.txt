@@ -1,6 +1,27 @@
 1. 网络文件系统启动
+
+setenv boardIP 192.168.1.57
+setenv hostIP 192.168.1.245
+setenv nfsdir /home/owen/nfs/ubuntubuBase
+setenv getwat 192.168.1.1
+setenv netmask 255.255.255.0
+
 setenv mmcboot 'echo Booting from mmc ...; run bootargs; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run loadfdt; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
-setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=192.168.11.109:/home/owen/nfs/RAE/rootfs,proto=tcp rw ip=192.168.11.57:192.168.11.109:192.168.11.1:255.255.255.0::eth0:off'
+setenv bootargs "console=ttymxc0,115200 root=/dev/nfs nfsroot=${hostIP}:${nfsdir},proto=tcp rw ip=${boardIP}:${hostIP}:${getwat}:${netmask}::eth0:off"
+saveenv
+reset
+
+
+
+setenv mmcboot 'echo Booting from mmc ...; run bootargs; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run loadfdt; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
+setenv bootargs 'console=ttymxc0,115200cd root=/dev/nfs nfsroot=192.168.11.58:/home/zhangyang/imx6ull/helix/rootfs,proto=tcp rw ip=192.168.11.57:192.168.11.58:192.168.11.1:255.255.255.0::eth0:off'
+saveenv
+reset
+
+
+
+
+
 
 2.mmc里的文件系统 启动
 setenv mmcboot 'echo Booting from mmc ...; run mmcargs; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run loadfdt; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
@@ -17,12 +38,24 @@ setenv ethaddr 00:04:9f:04:d2:35
 setenv ipaddr 192.168.11.57
 setenv gatewayip 192.168.11.1
 setenv netmask 255.255.255.0
-setenv serverip 192.168.11.119
+setenv serverip 192.168.11.122
 
 修改环境变量
 
 setenv myboot "nfs 87800000 192.168.11.109:/home/owen/nfs/RAE/uboot/u-boot.imx;go 87800000"
-setenv bootcmd "nfs 80800000 192.168.11.109:/home/owen/nfs/RAE/linux/arch/arm/boot/zImage;nfs 83800000 192.168.11.109:/home/owen/nfs/RAE/linux/arch/arm/boot/dts/imx6ull-alientek-emmc.dtb;bootz 80800000 - 83000000"
-saveenv
+setenv bootcmd "nfs 80800000 192.168.11.122:/home/owen/nfs/RAE/linux/arch/arm/boot/zImage;nfs 83000000 192.168.11.122:/home/owen/nfs/RAE/linux/arch/arm/boot/dts/imx6ull-alientek-emmc.dtb;bootz 80800000 - 83000000"
+//ATK 出厂的程序没有设置这个启动参数，根据需要设置这个启动参数以及文件系统位置(网络启动/emmc启动---mmcb1k1p2/SD卡---mmcb0k1p2)
+setenv bootargs "console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw"
+saveenv 
+在uboot模式下执行run myboot 
 
-在uboot模式下执行run 
+
+挂载指定文件夹作为共享目录:
+mount -t nfs -o nolock,nfsvers=3 192.168.11.122:/home/owen/nfs /mnt/nfs/
+
+
+
+将终端信息输出到屏幕上:
+
+setenv bootcmd "mmc dev 0;fatload mmc 0:1 0x80800000 zImage;fatload mmc 0:1 0x83000000 imx6ull-14x14-emmc-4.3-800x480-c.dtb;bootz 0x80800000 - 0x83000000" 
+setenv bootcmd "console=tty1,console=ttymxc0,115200 root=/dev/mmcblk0p2 rootwait rw"

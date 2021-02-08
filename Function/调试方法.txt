@@ -1,0 +1,7 @@
+1. 打印位置信息:  printk("File:%s Function:%s Line:%d \n",__FILE__,__FUNCTION__,__LINE__);
+2. 打印指针对应的函数名：
+    printk("%pf %pF\n", ptr, ptr) 
+    但是为了支持这个功能你需要开启CONFIG_KALLSYMS 选项
+
+3. [uboot] 打印等级和开关设置 dev_info，dev_debug，debug
+   https://blog.csdn.net/u010443710/article/details/106229235/

@@ -1,0 +1,3 @@
+1. 通过中断检测按键状态，源码：drivers\input\keyboard\gpio_keys.c
+2. 通过查询检测按键状态，源码：drivers\input\keyboard\gpio_keys_polled.c
+3. 按键的repeat 功能是全局的，也就是无法设置两个按键一个允许repeat一个禁止repeat

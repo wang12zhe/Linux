@@ -36,14 +36,16 @@
 	    !try_to_run_init_process("/bin/sh"))
 		return 0;
     在文件系统中存在/sbin/init文件，此处将执行/sbin/init，/sbin/init是个二进制文件，
+	并开始执行/etc/init.d/rc文件
 	
-	并开始执行/etc/init.d/rcS文件,设置运行级别为S并执行/etc/init.d/rc文件
-
-	首先运行级别是S，执行/etc/rcS.d下的文件
-		开始执行/etc/rcS.d/ 下的对用脚本   
-		1. S00psplash.sh
-		   1. mount tmpfs -t tmpfs $TMPDIR -o,size=40k   =================怎么理解
-		   2. /usr/bin/psplash --angle $rotation &      $rotation代表log的方向,
-    将运行级别改成5，并再次运行/etc/init.d/rc文件,并执rc5.d中相应的文件 ========在哪切换运行级别的?
-    	   
+	
+	
+	之后的运行进别是S(single-user)   =========why?
+	开始执行/etc/rcS.d/ 下的对用脚本   ============这些脚本是在哪启动执行的？
+	1. S00psplash.sh
+	   1. mount tmpfs -t tmpfs $TMPDIR -o,size=40k   =================怎么理解
+	   2. /usr/bin/psplash --angle $rotation &      $rotation代表log的方向,     
 	    
+
+
+RAE 的文件系统第一次使用需要创建几个文件夹：mkdir /proc /sys /tmp /var/empty

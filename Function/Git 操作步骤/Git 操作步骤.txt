@@ -2,7 +2,7 @@
 进入源码目录
 git add .  (提交所有变化，也可以指定对应文件)
 git commit -m "提交代码的log"
-git push -u origin master
+git push -u(第一次要用-u 以后不需要) origin master
 
 
 
@@ -10,10 +10,40 @@ git push -u origin master
 
 
 自动记录用户名和密码：
-git config --global user.name "E828374"
-git config --global user.email "zy_fever@163.com"
+git config --global user.name "Owen"
+git config --global user.email "635432187@qq.com"
 git init
 
 git clone https://gitee.com/e828374/uboot
 
-参考地址：https://www.cnblogs.com/duanming/p/11830252.html
+git clone https://gitee.com/e828374/linux
+
+git clone https://gitee.com/e828374/rootfs
+
+
+经过一下的配置后提交代码的时候就会显示提交人的名字Owen
+git config --global user.name "Owen"
+git config --global user.email "635432187@qq.com"
+git init
+
+
+
+
+
+
+
+git 记住用户名密码:
+永久记住: git config --global credential.helper store 
+	会在用户主目录的.gitconfig文件中生成下面的配置。
+
+	[credential]
+		helper = store
+	如果没有--global，则在当前项目下的.git/config文件中添加
+	
+临时记住密码
+	默认记住15分钟：
+
+	git config –global credential.helper cache
+	下面是自定义配置记住1小时：
+
+	git config credential.helper ‘cache –timeout=3600’
