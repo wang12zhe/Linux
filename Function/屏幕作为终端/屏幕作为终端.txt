@@ -2,3 +2,26 @@
 1. 取消开机log显示Device Drivers-->Graphics support-->Bootup logo-->[ ] Standard 224-color Linux logo
 2. setenv bootcmd "mmc dev 0;fatload mmc 0:1 0x80800000 zImage;fatload mmc 0:1 0x83000000 imx6ull-14x14-emmc-4.3-800x480-c.dtb;bootz 0x80800000 - 0x83000000" 
 3. setenv bootargs 'console=tty0 console=ttymxc0,115200n8 init=/sbin/init noinitrd root=/dev/mmcblk0p2 rootwait rw rootdelay=3 mem=256M vram=12M'
+
+
+
+在将终端显示在屏幕上后，可以将命令行的终端显示内容旋转，
+
+1.选择 Framebuffer Console Rotation编译进内核:
+   make menuconfig ---> Device Drivers  ---> Graphics support  ---> Console display driver support  ---> Framebuffer Console Rotation
+2.修改bootargs，增加fbcon=rotate:1:
+setenv bootargs 'console=tty0 console=ttymxc0,115200n8 fbcon=rotate:1 init=/sbin/init noinitrd root=/dev/mmcblk0p2 rootwait rw rootdelay=3 mem=256M vram=12M'
+
+
+说明： fbcon=rotate:<n>
+        This option changes the orientation angle of the console display. The
+        value 'n' accepts the following:
+
+        0 - normal orientation (0 degree)
+        1 - clockwise orientation (90 degrees)
+        2 - upside down orientation (180 degrees)
+        3 - counterclockwise orientation (270 degrees)
+
+
+
+

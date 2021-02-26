@@ -11,3 +11,6 @@ ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 mkdir /var/empty
 启动ssh服务：
 /usr/sbin/sshd
+
+
+测试发现root用户无法远程调试QT,新建普通用户并设置SSH的免密码登录，可以远程调试，但是因为是普通用户，会遇到很多设备无法打开，这只是权限问题
