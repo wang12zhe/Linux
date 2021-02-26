@@ -1,0 +1,2 @@
+1.  感觉正点原子的教程有问题，参考教程操作出来的有问题
+2. 参考 https://blog.csdn.net/sements/article/details/105240490/ 博文得到的文件系统比较正常
